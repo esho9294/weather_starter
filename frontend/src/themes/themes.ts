@@ -90,6 +90,66 @@ export const themes: Record<string, Theme> = {
       sectionGap: '16px',
     },
   },
+  sunsetGradient: {
+    id: 'sunsetGradient',
+    name: 'Sunset Gradient',
+    colors: {
+      background: 'radial-gradient(circle at 30% 20%, rgba(251, 146, 60, 0.3) 0%, transparent 50%), radial-gradient(circle at 70% 60%, rgba(236, 72, 153, 0.25) 0%, transparent 50%), linear-gradient(135deg, #fb923c 0%, #f97316 25%, #ec4899 60%, #a855f7 100%)',
+      text: '#fef3c7',
+      textSecondary: '#fde68a',
+      textTertiary: '#fcd34d',
+      cardBg: 'rgba(255, 255, 255, 0.12)',
+      cardBorder: 'rgba(251, 146, 60, 0.3)',
+      buttonBg: 'rgba(255, 255, 255, 0.15)',
+      buttonHover: 'rgba(255, 255, 255, 0.25)',
+      buttonText: '#fef3c7',
+      accent: '#fbbf24',
+    },
+    typography: {
+      fontFamily: 'Outfit, Poppins, system-ui, sans-serif',
+      headingWeight: '500',
+      bodyWeight: '400',
+    },
+    effects: {
+      cardRadius: '12px',
+      cardBlur: '40px',
+      cardShadow: '0 8px 32px rgba(236, 72, 153, 0.2), 0 0 0 1px rgba(251, 146, 60, 0.2)',
+    },
+    spacing: {
+      cardPadding: '20px',
+      sectionGap: '12px',
+    },
+  },
+  darkStorm: {
+    id: 'darkStorm',
+    name: 'Dark Storm',
+    colors: {
+      background: 'radial-gradient(circle at 50% 0%, rgba(59, 130, 246, 0.15) 0%, transparent 50%), radial-gradient(circle at 80% 100%, rgba(251, 191, 36, 0.1) 0%, transparent 50%), linear-gradient(180deg, #000000 0%, #18181b 50%, #27272a 100%)',
+      text: '#ffffff',
+      textSecondary: '#e4e4e7',
+      textTertiary: '#a1a1aa',
+      cardBg: 'rgba(255, 255, 255, 0.05)',
+      cardBorder: 'rgba(59, 130, 246, 0.3)',
+      buttonBg: 'rgba(59, 130, 246, 0.15)',
+      buttonHover: 'rgba(59, 130, 246, 0.25)',
+      buttonText: '#ffffff',
+      accent: '#3b82f6',
+    },
+    typography: {
+      fontFamily: 'Space Grotesk, DM Sans, system-ui, sans-serif',
+      headingWeight: '700',
+      bodyWeight: '400',
+    },
+    effects: {
+      cardRadius: '8px',
+      cardBlur: '20px',
+      cardShadow: '0 4px 20px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(59, 130, 246, 0.2)',
+    },
+    spacing: {
+      cardPadding: '16px',
+      sectionGap: '12px',
+    },
+  },
 };
 
 export const defaultTheme = 'apple';
