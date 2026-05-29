@@ -31,11 +31,12 @@ body,
 }
 
 body {
-  @apply text-white antialiased;
+  @apply antialiased;
   font-family: var(--theme-font-family);
   background: var(--theme-bg);
   background-attachment: fixed;
   background-repeat: no-repeat;
+  color: var(--theme-text);
 }
 
 button,
@@ -45,7 +46,8 @@ input {
 
 button:focus-visible,
 input:focus-visible {
-  @apply outline-none ring-2 ring-white/40 ring-offset-0;
+  @apply outline-none ring-2 ring-offset-0;
+  ring-color: var(--theme-accent);
 }
 
 ::-webkit-scrollbar {
@@ -60,4 +62,36 @@ input:focus-visible {
 
 ::-webkit-scrollbar-track {
   background: transparent;
+}
+
+/* Override Tailwind text-white classes to use theme variables */
+/* Using attribute selectors for better specificity */
+[class*="text-white"] {
+  color: var(--theme-text) !important;
+}
+
+[class*="text-white/95"],
+[class*="text-white/90"],
+[class*="text-white/85"],
+[class*="text-white/80"] {
+  color: var(--theme-text-secondary) !important;
+}
+
+[class*="text-white/75"],
+[class*="text-white/70"],
+[class*="text-white/60"],
+[class*="text-white/55"],
+[class*="text-white/50"],
+[class*="text-white/40"] {
+  color: var(--theme-text-tertiary) !important;
+}
+
+/* Button text on light backgrounds */
+[class*="text-slate-900"] {
+  color: var(--theme-button-text) !important;
+}
+
+/* Placeholder text colors */
+[class*="placeholder:text-white"]::placeholder {
+  color: var(--theme-text-tertiary) !important;
 }

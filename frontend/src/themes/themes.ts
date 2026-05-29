@@ -60,6 +60,36 @@ export const themes: Record<string, Theme> = {
       sectionGap: '12px',
     },
   },
+  arcticFrost: {
+    id: 'arcticFrost',
+    name: 'Arctic Frost',
+    colors: {
+      background: 'radial-gradient(circle at 20% 50%, rgba(224, 242, 254, 0.4) 0%, transparent 50%), radial-gradient(circle at 80% 80%, rgba(186, 230, 253, 0.3) 0%, transparent 50%), linear-gradient(180deg, #f0f9ff 0%, #e0f2fe 50%, #bae6fd 100%)',
+      text: '#000000',
+      textSecondary: '#1e293b',
+      textTertiary: '#475569',
+      cardBg: 'rgba(255, 255, 255, 0.7)',
+      cardBorder: 'rgba(6, 182, 212, 0.2)',
+      buttonBg: 'rgba(255, 255, 255, 0.8)',
+      buttonHover: 'rgba(224, 242, 254, 0.9)',
+      buttonText: '#000000',
+      accent: '#06b6d4',
+    },
+    typography: {
+      fontFamily: 'Inter, system-ui, -apple-system, sans-serif',
+      headingWeight: '300',
+      bodyWeight: '400',
+    },
+    effects: {
+      cardRadius: '20px',
+      cardBlur: '60px',
+      cardShadow: '0 4px 24px rgba(6, 182, 212, 0.08), 0 0 0 1px rgba(6, 182, 212, 0.1)',
+    },
+    spacing: {
+      cardPadding: '28px',
+      sectionGap: '16px',
+    },
+  },
 };
 
 export const defaultTheme = 'apple';
