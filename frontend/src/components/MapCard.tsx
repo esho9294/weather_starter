@@ -267,6 +267,7 @@ export function MapCard() {
         scrollWheelZoom={true}
         doubleClickZoom={true}
         zoomControl={true}
+        tapTolerance={5}
         ref={(map) => {
           if (map && !mapInstance) {
             try {
