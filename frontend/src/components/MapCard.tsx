@@ -34,7 +34,6 @@ export function MapCard() {
   const [mapError, setMapError] = useState<string | null>(null);
   const [tileError, setTileError] = useState<string | null>(null);
   const transitionTimerRef = useRef<NodeJS.Timeout | null>(null);
-  const initTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const tileErrorCountRef = useRef<number>(0);
 
   // Use map controller hook to manage bounds and state preservation
@@ -126,24 +125,6 @@ export function MapCard() {
     };
   }, []);
 
-  // Map initialization timeout - set error if map doesn't initialize within 2 seconds
-  useEffect(() => {
-    if (!mapInstance && !mapError) {
-      initTimeoutRef.current = setTimeout(() => {
-        if (!mapInstance) {
-          setMapError('Unable to load map. Please refresh the page.');
-          console.error('Map initialization failed: timeout after 2 seconds');
-        }
-      }, MAP_INIT_TIMEOUT);
-    }
-
-    return () => {
-      if (initTimeoutRef.current) {
-        clearTimeout(initTimeoutRef.current);
-      }
-    };
-  }, [mapInstance, mapError]);
-
   // Cleanup map resources on unmount
   useEffect(() => {
     return () => {
@@ -222,8 +203,9 @@ export function MapCard() {
     );
   }
 
-  const mapContent = (
-    <div className="relative h-full w-full">
+  // Render map content function to create fresh instances
+  const renderMapContent = (isFullscreenView: boolean) => (
+    <div className={`relative ${isFullscreenView ? 'h-screen w-screen' : 'h-full w-full flex-1'}`} style={{ minHeight: isFullscreenView ? '100vh' : '300px', height: isFullscreenView ? '100vh' : '100%' }}>
       {/* Tile error message */}
       {tileError && (
         <div className="absolute top-16 left-1/2 transform -translate-x-1/2 z-[1000] bg-red-500/90 text-white px-4 py-2 rounded-lg shadow-lg text-sm">
@@ -232,7 +214,7 @@ export function MapCard() {
       )}
 
       {/* Expand button (only shown in card view) */}
-      {!isFullscreen && (
+      {!isFullscreenView && (
         <button
           onClick={handleExpandClick}
           className="absolute right-4 top-4 z-[1000] rounded-lg bg-white/90 p-2 shadow-lg backdrop-blur-sm hover:bg-white disabled:opacity-50 disabled:cursor-not-allowed"
@@ -257,31 +239,24 @@ export function MapCard() {
 
       {/* Map container */}
       <MapContainer
+        key={isFullscreenView ? 'fullscreen' : 'card'}
         center={DEFAULT_CENTER}
         zoom={DEFAULT_ZOOM}
         minZoom={MIN_ZOOM}
         maxZoom={MAX_ZOOM}
-        className="h-full w-full rounded-2xl"
+        className={isFullscreenView ? "h-screen w-screen" : "h-full w-full rounded-2xl"}
+        style={{ minHeight: isFullscreenView ? '100vh' : '400px', height: '100%', width: '100%' }}
         dragging={true}
         touchZoom={true}
         scrollWheelZoom={true}
         doubleClickZoom={true}
         zoomControl={true}
         tapTolerance={5}
-        ref={(map) => {
-          if (map && !mapInstance) {
-            try {
-              setMapInstance(map);
-              // Clear initialization timeout on successful mount
-              if (initTimeoutRef.current) {
-                clearTimeout(initTimeoutRef.current);
-                initTimeoutRef.current = null;
-              }
-            } catch (error) {
-              console.error('Error setting map instance:', error);
-              setMapError('Unable to load map. Please refresh the page.');
-            }
-          }
+        whenReady={(map) => {
+          // Force map to recalculate size when ready
+          setTimeout(() => {
+            map.target.invalidateSize();
+          }, 100);
         }}
       >
         <TileLayer
@@ -317,14 +292,18 @@ export function MapCard() {
   return (
     <>
       {/* Card view */}
-      <section className="rounded-2xl border border-white/15 bg-white/[0.08] backdrop-blur-xl overflow-hidden min-h-[300px] md:min-h-[400px] w-full transition-all duration-500">
-        {mapContent}
-      </section>
+      {!isFullscreen && (
+        <section className="rounded-2xl border border-white/15 bg-white/[0.08] backdrop-blur-xl overflow-hidden min-h-[300px] md:min-h-[400px] w-full transition-all duration-500 flex flex-col">
+          {renderMapContent(false)}
+        </section>
+      )}
 
       {/* Fullscreen view using portal */}
-      <FullscreenPortal isOpen={isFullscreen} onClose={handleCloseClick} isTransitioning={isTransitioning}>
-        {mapContent}
-      </FullscreenPortal>
+      {isFullscreen && (
+        <FullscreenPortal isOpen={isFullscreen} onClose={handleCloseClick} isTransitioning={isTransitioning}>
+          {renderMapContent(true)}
+        </FullscreenPortal>
+      )}
     </>
   );
 }

@@ -6,7 +6,7 @@ This implementation plan breaks down the Weather Map Card feature into discrete 
 
 ## Tasks
 
-- [~] 1. Install dependencies and configure map library
+- [ ] 1. Install dependencies and configure map library
   - Install `react-leaflet` package (version 4.x)
   - Install `@types/leaflet` as dev dependency
   - Import Leaflet CSS in `main.tsx` or `index.css`
@@ -115,7 +115,7 @@ This implementation plan breaks down the Weather Map Card feature into discrete 
     - Test preservation of center and zoom during transitions
     - _Requirements: 1.5, 1.6, 1.8, 2.3, 2.4, 2.6_
 
-- [~] 8. Checkpoint - Ensure core map functionality works
+- [ ] 8. Checkpoint - Ensure core map functionality works
   - Ensure all tests pass, ask the user if questions arise.
 
 - [x] 9. Create FullscreenPortal component
@@ -184,7 +184,7 @@ This implementation plan breaks down the Weather Map Card feature into discrete 
     - Update labels within 200ms when weather data refreshes
     - _Requirements: 3.1, 3.2, 3.3, 3.4, 3.5, 3.6_
   
-  - [-] 12.2 Write integration tests for weather label display
+  - [ ] 12.2 Write integration tests for weather label display
     - Test labels display correct temperature or condition
     - Test labels update within 200ms when weather refreshes
     - Test collision detection maintains 30px separation
@@ -192,7 +192,7 @@ This implementation plan breaks down the Weather Map Card feature into discrete 
     - _Requirements: 3.2, 3.3, 3.4, 3.5, 3.6_
 
 - [ ] 13. Implement map interaction and navigation
-  - [-] 13.1 Configure map interaction settings
+  - [ ] 13.1 Configure map interaction settings
     - Enable pan with mouse/touch drag (5px minimum movement)
     - Enable zoom with scroll wheel, pinch gestures, and zoom controls
     - Set minimum zoom level to 1 and maximum to 18
@@ -200,7 +200,7 @@ This implementation plan breaks down the Weather Map Card feature into discrete 
     - Apply same settings to both card and fullscreen views
     - _Requirements: 5.1, 5.2, 5.3, 5.4, 5.5, 5.6, 5.7_
   
-  - [~] 13.2 Write integration tests for map interaction
+  - [ ] 13.2 Write integration tests for map interaction
     - Test map pans on drag (5px minimum)
     - Test map zooms with scroll wheel
     - Test zoom level constraints (min 1, max 18)
@@ -208,7 +208,7 @@ This implementation plan breaks down the Weather Map Card feature into discrete 
     - _Requirements: 5.1, 5.2, 5.3, 5.4, 5.5, 5.6, 5.7_
 
 - [ ] 14. Implement responsive design
-  - [-] 14.1 Add responsive styling to MapCard
+  - [ ] 14.1 Add responsive styling to MapCard
     - Set minimum height 400px and grid column width for viewport >= 768px
     - Set minimum height 300px and 100% width for viewport < 768px
     - Make fullscreen view occupy 100% viewport width and height
@@ -216,7 +216,7 @@ This implementation plan breaks down the Weather Map Card feature into discrete 
     - Handle viewport resize in fullscreen to adjust to new dimensions within 500ms
     - _Requirements: 6.1, 6.2, 6.3, 6.4, 6.5_
   
-  - [~] 14.2 Write integration tests for responsive behavior
+  - [ ] 14.2 Write integration tests for responsive behavior
     - Test card dimensions at mobile width (< 768px)
     - Test card dimensions at desktop width (>= 768px)
     - Test fullscreen occupies full viewport
@@ -224,7 +224,7 @@ This implementation plan breaks down the Weather Map Card feature into discrete 
     - _Requirements: 6.1, 6.2, 6.3, 6.4, 6.5_
 
 - [ ] 15. Implement error handling
-  - [-] 15.1 Add error handling to MapCard
+  - [ ] 15.1 Add error handling to MapCard
     - Wrap map initialization in try-catch block
     - Display "Unable to load map. Please refresh the page." on initialization failure (2s timeout)
     - Configure TileLayer with errorTileUrl for gray placeholder tiles
@@ -232,27 +232,27 @@ This implementation plan breaks down the Weather Map Card feature into discrete 
     - Call map.remove() on component unmount to clean up resources
     - _Requirements: 7.3, 7.4, 7.5, 7.8_
   
-  - [~] 15.2 Write unit tests for error handling
+  - [ ] 15.2 Write unit tests for error handling
     - Test error message display on map initialization failure
     - Test gray placeholder tiles on tile loading failure
     - Test map.remove() called on unmount
     - _Requirements: 7.3, 7.4, 7.5, 7.8_
 
 - [ ] 16. Integrate MapCard into Hero component
-  - [~] 16.1 Add MapCard to Hero component layout
+  - [ ] 16.1 Add MapCard to Hero component layout
     - Import MapCard component in `Hero.tsx`
     - Render MapCard after the header section and validPeriod paragraph
     - Position MapCard before HourlyStrip component
     - Ensure MapCard uses same card styling as other dashboard components
     - _Requirements: 1.1, 1.2, 1.4_
   
-  - [~] 16.2 Write integration tests for Hero layout
+  - [ ] 16.2 Write integration tests for Hero layout
     - Test MapCard renders in correct position in dashboard
     - Test MapCard does not replace main weather view
     - Test MapCard styling matches other dashboard cards
     - _Requirements: 1.1, 1.2, 1.4_
 
-- [~] 17. Final checkpoint - End-to-end testing
+- [ ] 17. Final checkpoint - End-to-end testing
   - Ensure all tests pass, ask the user if questions arise.
 
 ## Notes
