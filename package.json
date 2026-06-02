@@ -14,12 +14,15 @@
     "test:watch": "cross-env NODE_OPTIONS=--disable-warning=ExperimentalWarning vitest",
     "lint": "eslint \"frontend/src/**/*.{ts,tsx}\" \"backend/src/**/*.ts\"",
     "format": "prettier --write \"frontend/src/**/*.{ts,tsx,css}\" \"backend/src/**/*.ts\"",
+    "docs": "npm run dev -w docs-site",
+    "docs:build": "npm run build -w docs-site",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate"
   },
   "workspaces": [
     "frontend",
-    "backend"
+    "backend",
+    "docs-site"
   ],
   "dependencies": {
     "@vitejs/plugin-react": "^5.1.4",
