@@ -4,6 +4,7 @@ import pinoHttpModule from 'pino-http';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { createLocationsRouter, type WeatherClient } from './routes/locations.js';
+import { createAreasRouter } from './routes/areas.js';
 import { logger } from './logger.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -58,6 +59,7 @@ export async function createApp(options: AppOptions = {}) {
   });
 
   app.use('/api', createLocationsRouter({ weatherClient: options.weatherClient }));
+  app.use('/api', createAreasRouter());
 
   if (serveFrontend) {
     if (process.env.NODE_ENV === 'production') {

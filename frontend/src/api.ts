@@ -1,4 +1,4 @@
-import type { CreateLocationPayload, Location } from './types';
+import type { CreateLocationPayload, Location, AreaMetadata } from './types';
 
 const API_BASE = '/api';
 
@@ -33,6 +33,8 @@ export const refreshLocation = (id: number) =>
 
 export const deleteLocation = (id: number) =>
   request<null>(`/locations/${id}`, { method: 'DELETE' });
+
+export const fetchAreas = () => request<AreaMetadata[]>('/areas');
 
 export function logInteraction(event: string, metadata: object = {}) {
   const page = typeof window === 'undefined' ? undefined : window.location.pathname;

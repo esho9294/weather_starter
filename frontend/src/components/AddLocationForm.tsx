@@ -2,6 +2,7 @@ import { useState } from 'react';
 import type { FormEvent } from 'react';
 import { useStore } from '../state/store';
 import { PlusIcon } from './icons';
+import { UseMyLocationButton } from './UseMyLocationButton';
 
 export function AddLocationForm() {
   const { isAdding, setAdding, create } = useStore();
@@ -95,6 +96,7 @@ export function AddLocationForm() {
           {submitting ? 'Adding…' : 'Add'}
         </button>
       </div>
+      <UseMyLocationButton />
       {submitError && (
         <p className="rounded-md border border-red-300/30 bg-red-500/15 px-2.5 py-1.5 text-xs text-red-100">
           {submitError}
