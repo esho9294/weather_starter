@@ -85,56 +85,56 @@ describe('validateCoordinates', () => {
     it('rejects latitude below minimum (-90.1)', () => {
       const location = createMockLocation(-90.1, 0);
       expect(validateCoordinates(location)).toBe(false);
-      expect(consoleErrorSpy).toHaveBeenCalledWith(
-        'Invalid coordinates for location 1:',
-        { latitude: -90.1, longitude: 0 }
-      );
+      expect(consoleErrorSpy).toHaveBeenCalledWith('Invalid coordinates for location 1:', {
+        latitude: -90.1,
+        longitude: 0,
+      });
     });
 
     it('rejects latitude above maximum (90.1)', () => {
       const location = createMockLocation(90.1, 0);
       expect(validateCoordinates(location)).toBe(false);
-      expect(consoleErrorSpy).toHaveBeenCalledWith(
-        'Invalid coordinates for location 1:',
-        { latitude: 90.1, longitude: 0 }
-      );
+      expect(consoleErrorSpy).toHaveBeenCalledWith('Invalid coordinates for location 1:', {
+        latitude: 90.1,
+        longitude: 0,
+      });
     });
 
     it('rejects longitude below minimum (-180.1)', () => {
       const location = createMockLocation(0, -180.1);
       expect(validateCoordinates(location)).toBe(false);
-      expect(consoleErrorSpy).toHaveBeenCalledWith(
-        'Invalid coordinates for location 1:',
-        { latitude: 0, longitude: -180.1 }
-      );
+      expect(consoleErrorSpy).toHaveBeenCalledWith('Invalid coordinates for location 1:', {
+        latitude: 0,
+        longitude: -180.1,
+      });
     });
 
     it('rejects longitude above maximum (180.1)', () => {
       const location = createMockLocation(0, 180.1);
       expect(validateCoordinates(location)).toBe(false);
-      expect(consoleErrorSpy).toHaveBeenCalledWith(
-        'Invalid coordinates for location 1:',
-        { latitude: 0, longitude: 180.1 }
-      );
+      expect(consoleErrorSpy).toHaveBeenCalledWith('Invalid coordinates for location 1:', {
+        latitude: 0,
+        longitude: 180.1,
+      });
     });
 
     it('rejects both latitude and longitude out of range', () => {
       const location = createMockLocation(100, 200);
       expect(validateCoordinates(location)).toBe(false);
-      expect(consoleErrorSpy).toHaveBeenCalledWith(
-        'Invalid coordinates for location 1:',
-        { latitude: 100, longitude: 200 }
-      );
+      expect(consoleErrorSpy).toHaveBeenCalledWith('Invalid coordinates for location 1:', {
+        latitude: 100,
+        longitude: 200,
+      });
     });
 
     it('logs error with correct location id', () => {
       const location = createMockLocation(100, 0);
       location.id = 42;
       validateCoordinates(location);
-      expect(consoleErrorSpy).toHaveBeenCalledWith(
-        'Invalid coordinates for location 42:',
-        { latitude: 100, longitude: 0 }
-      );
+      expect(consoleErrorSpy).toHaveBeenCalledWith('Invalid coordinates for location 42:', {
+        latitude: 100,
+        longitude: 0,
+      });
     });
   });
 });
@@ -160,7 +160,7 @@ describe('resolveCollisions', () => {
         { x: 100, y: 120, id: 2 }, // 20px apart - collision
       ];
       const result = resolveCollisions(labels);
-      
+
       // First label unchanged
       expect(result[0]).toEqual({ x: 100, y: 100, id: 1 });
       // Second label needs 60px offset to achieve 30px separation (120-60=60, distance from 100 is 40px)
@@ -173,7 +173,7 @@ describe('resolveCollisions', () => {
         { x: 100, y: 130, id: 2 }, // Exactly 30px apart - no collision
       ];
       const result = resolveCollisions(labels);
-      
+
       expect(result[0]).toEqual({ x: 100, y: 100, id: 1 });
       expect(result[1]).toEqual({ x: 100, y: 130, id: 2 });
     });
@@ -184,7 +184,7 @@ describe('resolveCollisions', () => {
         { x: 100, y: 150, id: 2 }, // 50px apart - no collision
       ];
       const result = resolveCollisions(labels);
-      
+
       expect(result[0]).toEqual({ x: 100, y: 100, id: 1 });
       expect(result[1]).toEqual({ x: 100, y: 150, id: 2 });
     });
@@ -197,7 +197,7 @@ describe('resolveCollisions', () => {
         { x: 100, y: 110, id: 2 }, // 10px apart - collision
       ];
       const result = resolveCollisions(labels);
-      
+
       // 110 - 60 = 50 (distance from 100 is 50px, which is >= 30px)
       expect(result[1].y).toBe(50);
     });
@@ -208,7 +208,7 @@ describe('resolveCollisions', () => {
         { x: 100, y: 120, id: 2 }, // Would collide at 90 (120-30), needs 60px offset
       ];
       const result = resolveCollisions(labels);
-      
+
       expect(result[1].y).toBe(60); // 120 - 60 = 60
     });
 
@@ -218,7 +218,7 @@ describe('resolveCollisions', () => {
         { x: 100, y: 150, id: 2 }, // Would collide at 120 (150-30) and 90 (150-60), needs 90px
       ];
       const result = resolveCollisions(labels);
-      
+
       // 150 is far enough that no offset is needed (50px separation)
       expect(result[1].y).toBe(150);
     });
@@ -232,10 +232,10 @@ describe('resolveCollisions', () => {
         { x: 100, y: 120, id: 3 },
       ];
       const result = resolveCollisions(labels);
-      
+
       expect(result[0].y).toBe(100); // No offset
-      expect(result[1].y).toBe(50);  // 110 - 60 (needs 60px to clear y=100)
-      expect(result[2].y).toBe(30);  // 120 - 90 (needs 90px to clear y=100 and y=50)
+      expect(result[1].y).toBe(50); // 110 - 60 (needs 60px to clear y=100)
+      expect(result[2].y).toBe(30); // 120 - 90 (needs 90px to clear y=100 and y=50)
     });
 
     it('stops stacking after 90px offset (max 3 labels)', () => {
@@ -246,11 +246,11 @@ describe('resolveCollisions', () => {
         { x: 100, y: 115, id: 4 }, // Very close - will need >90px offset
       ];
       const result = resolveCollisions(labels);
-      
+
       expect(result[0].y).toBe(100); // No offset
-      expect(result[1].y).toBe(45);  // 105 - 60 (needs 60px to clear y=100)
-      expect(result[2].y).toBe(20);  // 110 - 90 (needs 90px to clear y=100 and y=45)
-      expect(result[3].y).toBe(25);  // 115 - 90 (max offset, will collide with y=20)
+      expect(result[1].y).toBe(45); // 105 - 60 (needs 60px to clear y=100)
+      expect(result[2].y).toBe(20); // 110 - 90 (needs 90px to clear y=100 and y=45)
+      expect(result[3].y).toBe(25); // 115 - 90 (max offset, will collide with y=20)
     });
   });
 
@@ -262,7 +262,7 @@ describe('resolveCollisions', () => {
         { x: 100, y: 125, id: 2 },
       ];
       const result = resolveCollisions(labels);
-      
+
       // Should process in order: id 1 (y=100), id 2 (y=125), id 3 (y=150)
       expect(result[0].id).toBe(1);
       expect(result[1].id).toBe(2);
@@ -275,13 +275,13 @@ describe('resolveCollisions', () => {
         { x: 100, y: 100, id: 1 },
       ];
       const result = resolveCollisions(labels);
-      
+
       // After sorting: id 1 at y=100, id 2 at y=120
-      const label1 = result.find(l => l.id === 1);
-      const label2 = result.find(l => l.id === 2);
-      
+      const label1 = result.find((l) => l.id === 1);
+      const label2 = result.find((l) => l.id === 2);
+
       expect(label1?.y).toBe(100); // No offset
-      expect(label2?.y).toBe(60);  // 120 - 60 (needs 60px to achieve 30px separation)
+      expect(label2?.y).toBe(60); // 120 - 60 (needs 60px to achieve 30px separation)
     });
   });
 
@@ -292,7 +292,7 @@ describe('resolveCollisions', () => {
         { x: 200, y: 100, id: 2 }, // Same y, different x
       ];
       const result = resolveCollisions(labels);
-      
+
       expect(result[0].y).toBe(100);
       expect(result[1].y).toBe(70); // 100 - 30 (needs 30px offset to achieve 30px separation)
     });
@@ -303,7 +303,7 @@ describe('resolveCollisions', () => {
         { x: 100, y: -40, id: 2 },
       ];
       const result = resolveCollisions(labels);
-      
+
       expect(result[0].y).toBe(-50);
       expect(result[1].y).toBe(-100); // -40 - 60 (needs 60px offset)
     });
@@ -314,7 +314,7 @@ describe('resolveCollisions', () => {
         { x: 200, y: 110, id: 'label-b' },
       ];
       const result = resolveCollisions(labels);
-      
+
       expect(result[0]).toEqual({ x: 150, y: 100, id: 'label-a' });
       expect(result[1].x).toBe(200);
       expect(result[1].id).toBe('label-b');
@@ -326,9 +326,9 @@ describe('resolveCollisions', () => {
         { x: 100, y: 110, id: 2 },
       ];
       const original = JSON.parse(JSON.stringify(labels));
-      
+
       resolveCollisions(labels);
-      
+
       expect(labels).toEqual(original);
     });
   });

@@ -1,8 +1,8 @@
 /**
  * Integration tests for MapCard responsive behavior
- * 
+ *
  * **Validates: Requirements 6.1, 6.2, 6.3, 6.4, 6.5**
- * 
+ *
  * Tests cover:
  * - Card dimensions at mobile width (< 768px) (Requirement 6.2)
  * - Card dimensions at desktop width (>= 768px) (Requirement 6.1)
@@ -57,8 +57,12 @@ vi.mock('./LocationMarker', () => ({
 // Mock mapUtils
 vi.mock('./mapUtils', () => ({
   validateCoordinates: (location: any) => {
-    return location.latitude >= -90 && location.latitude <= 90 &&
-           location.longitude >= -180 && location.longitude <= 180;
+    return (
+      location.latitude >= -90 &&
+      location.latitude <= 90 &&
+      location.longitude >= -180 &&
+      location.longitude <= 180
+    );
   },
   resolveCollisions: (positions: any[]) => positions,
 }));
@@ -152,13 +156,13 @@ describe('MapCard - Responsive Behavior Integration', () => {
       const { container } = render(
         <StoreProvider>
           <MapCard />
-        </StoreProvider>
+        </StoreProvider>,
       );
 
       await waitFor(() => {
         const cardSection = container.querySelector('section.rounded-2xl');
         expect(cardSection).toBeInTheDocument();
-        
+
         // Check that the card has mobile minimum height class
         expect(cardSection).toHaveClass('min-h-[300px]');
       });
@@ -174,13 +178,13 @@ describe('MapCard - Responsive Behavior Integration', () => {
       const { container } = render(
         <StoreProvider>
           <MapCard />
-        </StoreProvider>
+        </StoreProvider>,
       );
 
       await waitFor(() => {
         const cardSection = container.querySelector('section.rounded-2xl');
         expect(cardSection).toBeInTheDocument();
-        
+
         // Check that the card has full width class
         expect(cardSection).toHaveClass('w-full');
       });
@@ -195,7 +199,7 @@ describe('MapCard - Responsive Behavior Integration', () => {
         const { container, unmount } = render(
           <StoreProvider>
             <MapCard />
-          </StoreProvider>
+          </StoreProvider>,
         );
 
         await waitFor(() => {
@@ -221,13 +225,13 @@ describe('MapCard - Responsive Behavior Integration', () => {
       const { container } = render(
         <StoreProvider>
           <MapCard />
-        </StoreProvider>
+        </StoreProvider>,
       );
 
       await waitFor(() => {
         const cardSection = container.querySelector('section.rounded-2xl');
         expect(cardSection).toBeInTheDocument();
-        
+
         // Check that the card has desktop minimum height class
         expect(cardSection).toHaveClass('md:min-h-[400px]');
       });
@@ -243,13 +247,13 @@ describe('MapCard - Responsive Behavior Integration', () => {
       const { container } = render(
         <StoreProvider>
           <MapCard />
-        </StoreProvider>
+        </StoreProvider>,
       );
 
       await waitFor(() => {
         const cardSection = container.querySelector('section.rounded-2xl');
         expect(cardSection).toBeInTheDocument();
-        
+
         // At 768px, should have desktop height
         expect(cardSection).toHaveClass('md:min-h-[400px]');
       });
@@ -264,7 +268,7 @@ describe('MapCard - Responsive Behavior Integration', () => {
         const { container, unmount } = render(
           <StoreProvider>
             <MapCard />
-          </StoreProvider>
+          </StoreProvider>,
         );
 
         await waitFor(() => {
@@ -288,7 +292,7 @@ describe('MapCard - Responsive Behavior Integration', () => {
       const { container } = render(
         <StoreProvider>
           <MapCard />
-        </StoreProvider>
+        </StoreProvider>,
       );
 
       // Wait for map to render
@@ -304,7 +308,7 @@ describe('MapCard - Responsive Behavior Integration', () => {
         // Check for fullscreen container - it's rendered to document.body via portal
         const fullscreenDiv = document.body.querySelector('.fixed.inset-0');
         expect(fullscreenDiv).toBeInTheDocument();
-        
+
         // Verify fullscreen classes
         expect(fullscreenDiv).toHaveClass('fixed', 'inset-0', 'z-50', 'bg-black');
       });
@@ -319,7 +323,7 @@ describe('MapCard - Responsive Behavior Integration', () => {
       const { container } = render(
         <StoreProvider>
           <MapCard />
-        </StoreProvider>
+        </StoreProvider>,
       );
 
       await waitFor(() => {
@@ -333,7 +337,7 @@ describe('MapCard - Responsive Behavior Integration', () => {
       await waitFor(() => {
         const fullscreenDiv = document.body.querySelector('.fixed.inset-0');
         expect(fullscreenDiv).toBeInTheDocument();
-        
+
         // inset-0 means top-0 right-0 bottom-0 left-0, which fills the viewport
         expect(fullscreenDiv).toHaveClass('inset-0');
       });
@@ -348,7 +352,7 @@ describe('MapCard - Responsive Behavior Integration', () => {
       const { container } = render(
         <StoreProvider>
           <MapCard />
-        </StoreProvider>
+        </StoreProvider>,
       );
 
       await waitFor(() => {
@@ -378,7 +382,7 @@ describe('MapCard - Responsive Behavior Integration', () => {
       const { container } = render(
         <StoreProvider>
           <MapCard />
-        </StoreProvider>
+        </StoreProvider>,
       );
 
       // Wait for map to initialize
@@ -392,12 +396,12 @@ describe('MapCard - Responsive Behavior Integration', () => {
 
       // Resize viewport to mobile
       setViewportSize(375, 667);
-      
+
       // Trigger resize event
       fireEvent(window, new Event('resize'));
 
       // Wait for any resize handling to complete
-      await new Promise(resolve => setTimeout(resolve, 600));
+      await new Promise((resolve) => setTimeout(resolve, 600));
 
       // Card should still have responsive classes
       expect(cardSection).toHaveClass('min-h-[300px]', 'md:min-h-[400px]');
@@ -413,7 +417,7 @@ describe('MapCard - Responsive Behavior Integration', () => {
       const { container } = render(
         <StoreProvider>
           <MapCard />
-        </StoreProvider>
+        </StoreProvider>,
       );
 
       await waitFor(() => {
@@ -426,12 +430,12 @@ describe('MapCard - Responsive Behavior Integration', () => {
 
       // Resize viewport to desktop
       setViewportSize(1024, 768);
-      
+
       // Trigger resize event
       fireEvent(window, new Event('resize'));
 
       // Wait for any resize handling to complete
-      await new Promise(resolve => setTimeout(resolve, 600));
+      await new Promise((resolve) => setTimeout(resolve, 600));
 
       // Card should still have responsive classes
       expect(cardSection).toHaveClass('min-h-[300px]', 'md:min-h-[400px]');
@@ -447,7 +451,7 @@ describe('MapCard - Responsive Behavior Integration', () => {
       render(
         <StoreProvider>
           <MapCard />
-        </StoreProvider>
+        </StoreProvider>,
       );
 
       // Wait for map and enter fullscreen
@@ -468,12 +472,12 @@ describe('MapCard - Responsive Behavior Integration', () => {
 
       // Resize viewport while in fullscreen
       setViewportSize(1920, 1080);
-      
+
       // Trigger resize event
       fireEvent(window, new Event('resize'));
 
       // Wait for any resize handling to complete
-      await new Promise(resolve => setTimeout(resolve, 600));
+      await new Promise((resolve) => setTimeout(resolve, 600));
 
       // Fullscreen should still be active with correct classes
       expect(fullscreenDiv).toHaveClass('fixed', 'inset-0');
@@ -488,7 +492,7 @@ describe('MapCard - Responsive Behavior Integration', () => {
       render(
         <StoreProvider>
           <MapCard />
-        </StoreProvider>
+        </StoreProvider>,
       );
 
       await waitFor(() => {
@@ -502,7 +506,7 @@ describe('MapCard - Responsive Behavior Integration', () => {
       }
 
       // Wait for debounce period
-      await new Promise(resolve => setTimeout(resolve, 600));
+      await new Promise((resolve) => setTimeout(resolve, 600));
 
       // Map should still be rendered without errors
       expect(screen.getByTestId('map-container')).toBeInTheDocument();
@@ -518,7 +522,7 @@ describe('MapCard - Responsive Behavior Integration', () => {
       const { container } = render(
         <StoreProvider>
           <MapCard />
-        </StoreProvider>
+        </StoreProvider>,
       );
 
       await waitFor(() => {
@@ -529,7 +533,7 @@ describe('MapCard - Responsive Behavior Integration', () => {
       setViewportSize(768, 1024);
       fireEvent(window, new Event('resize'));
 
-      await new Promise(resolve => setTimeout(resolve, 600));
+      await new Promise((resolve) => setTimeout(resolve, 600));
 
       // Verify card still has correct classes
       const cardSection = container.querySelector('section.rounded-2xl');
@@ -547,13 +551,13 @@ describe('MapCard - Responsive Behavior Integration', () => {
       const { container } = render(
         <StoreProvider>
           <MapCard />
-        </StoreProvider>
+        </StoreProvider>,
       );
 
       await waitFor(() => {
         const cardSection = container.querySelector('section.rounded-2xl');
         expect(cardSection).toBeInTheDocument();
-        
+
         // Verify all card styling classes are present
         expect(cardSection).toHaveClass(
           'rounded-2xl',
@@ -561,7 +565,7 @@ describe('MapCard - Responsive Behavior Integration', () => {
           'border-white/15',
           'bg-white/[0.08]',
           'backdrop-blur-xl',
-          'overflow-hidden'
+          'overflow-hidden',
         );
       });
 
@@ -571,7 +575,7 @@ describe('MapCard - Responsive Behavior Integration', () => {
 
       await waitFor(() => {
         const cardSection = container.querySelector('section.rounded-2xl');
-        
+
         // Styling classes should remain consistent
         expect(cardSection).toHaveClass(
           'rounded-2xl',
@@ -579,7 +583,7 @@ describe('MapCard - Responsive Behavior Integration', () => {
           'border-white/15',
           'bg-white/[0.08]',
           'backdrop-blur-xl',
-          'overflow-hidden'
+          'overflow-hidden',
         );
       });
     });
@@ -593,13 +597,13 @@ describe('MapCard - Responsive Behavior Integration', () => {
       const { container } = render(
         <StoreProvider>
           <MapCard />
-        </StoreProvider>
+        </StoreProvider>,
       );
 
       await waitFor(() => {
         const cardSection = container.querySelector('section.rounded-2xl');
         expect(cardSection).toBeInTheDocument();
-        
+
         // Check for transition classes
         expect(cardSection).toHaveClass('transition-all', 'duration-500');
       });

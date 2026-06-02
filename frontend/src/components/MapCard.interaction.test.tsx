@@ -1,8 +1,8 @@
 /**
  * Integration tests for MapCard map interaction and navigation
- * 
+ *
  * **Validates: Requirements 5.1, 5.2, 5.3, 5.4, 5.5, 5.6, 5.7**
- * 
+ *
  * Tests cover:
  * - Map pans on drag with 5px minimum movement (Requirement 5.1, 5.3)
  * - Map zooms with scroll wheel (Requirement 5.2, 5.4)
@@ -25,7 +25,16 @@ let mockDraggingEnabled = true;
 let mockScrollWheelZoomEnabled = true;
 
 vi.mock('react-leaflet', () => ({
-  MapContainer: ({ children, center, zoom, minZoom, maxZoom, dragging, scrollWheelZoom, ref }: any) => {
+  MapContainer: ({
+    children,
+    center,
+    zoom,
+    minZoom,
+    maxZoom,
+    dragging,
+    scrollWheelZoom,
+    ref,
+  }: any) => {
     // Create a mock map instance
     const mapInstance = {
       _center: center,
@@ -124,8 +133,12 @@ vi.mock('./LocationMarker', () => ({
 // Mock mapUtils
 vi.mock('./mapUtils', () => ({
   validateCoordinates: (location: any) => {
-    return location.latitude >= -90 && location.latitude <= 90 &&
-           location.longitude >= -180 && location.longitude <= 180;
+    return (
+      location.latitude >= -90 &&
+      location.latitude <= 90 &&
+      location.longitude >= -180 &&
+      location.longitude <= 180
+    );
   },
   resolveCollisions: (positions: any[]) => positions,
 }));
@@ -202,7 +215,7 @@ describe('MapCard - Map Interaction and Navigation', () => {
       render(
         <StoreProvider>
           <MapCard />
-        </StoreProvider>
+        </StoreProvider>,
       );
 
       await waitFor(() => {
@@ -217,7 +230,7 @@ describe('MapCard - Map Interaction and Navigation', () => {
       render(
         <StoreProvider>
           <MapCard />
-        </StoreProvider>
+        </StoreProvider>,
       );
 
       await waitFor(() => {
@@ -239,7 +252,7 @@ describe('MapCard - Map Interaction and Navigation', () => {
       render(
         <StoreProvider>
           <MapCard />
-        </StoreProvider>
+        </StoreProvider>,
       );
 
       await waitFor(() => {
@@ -248,7 +261,7 @@ describe('MapCard - Map Interaction and Navigation', () => {
 
       const startTime = Date.now();
       const newCenter: [number, number] = [1.3621, 103.8298];
-      
+
       // Simulate pan operation
       mockMapInstance.panTo(newCenter);
 
@@ -266,7 +279,7 @@ describe('MapCard - Map Interaction and Navigation', () => {
       render(
         <StoreProvider>
           <MapCard />
-        </StoreProvider>
+        </StoreProvider>,
       );
 
       await waitFor(() => {
@@ -284,7 +297,7 @@ describe('MapCard - Map Interaction and Navigation', () => {
       render(
         <StoreProvider>
           <MapCard />
-        </StoreProvider>
+        </StoreProvider>,
       );
 
       await waitFor(() => {
@@ -299,7 +312,7 @@ describe('MapCard - Map Interaction and Navigation', () => {
       render(
         <StoreProvider>
           <MapCard />
-        </StoreProvider>
+        </StoreProvider>,
       );
 
       await waitFor(() => {
@@ -307,7 +320,7 @@ describe('MapCard - Map Interaction and Navigation', () => {
       });
 
       const initialZoom = mockZoom;
-      
+
       // Simulate zoom in (scroll wheel up)
       mockMapInstance.zoomIn();
 
@@ -320,7 +333,7 @@ describe('MapCard - Map Interaction and Navigation', () => {
       render(
         <StoreProvider>
           <MapCard />
-        </StoreProvider>
+        </StoreProvider>,
       );
 
       await waitFor(() => {
@@ -328,7 +341,7 @@ describe('MapCard - Map Interaction and Navigation', () => {
       });
 
       const initialZoom = mockZoom;
-      
+
       // Simulate zoom out (scroll wheel down)
       mockMapInstance.zoomOut();
 
@@ -341,7 +354,7 @@ describe('MapCard - Map Interaction and Navigation', () => {
       render(
         <StoreProvider>
           <MapCard />
-        </StoreProvider>
+        </StoreProvider>,
       );
 
       await waitFor(() => {
@@ -349,7 +362,7 @@ describe('MapCard - Map Interaction and Navigation', () => {
       });
 
       const initialZoom = mockZoom;
-      
+
       // Simulate single scroll notch (zoom in)
       mockMapInstance.zoomIn();
       expect(mockZoom).toBe(initialZoom + 1);
@@ -369,7 +382,7 @@ describe('MapCard - Map Interaction and Navigation', () => {
       render(
         <StoreProvider>
           <MapCard />
-        </StoreProvider>
+        </StoreProvider>,
       );
 
       await waitFor(() => {
@@ -386,7 +399,7 @@ describe('MapCard - Map Interaction and Navigation', () => {
       render(
         <StoreProvider>
           <MapCard />
-        </StoreProvider>
+        </StoreProvider>,
       );
 
       await waitFor(() => {
@@ -401,7 +414,7 @@ describe('MapCard - Map Interaction and Navigation', () => {
       render(
         <StoreProvider>
           <MapCard />
-        </StoreProvider>
+        </StoreProvider>,
       );
 
       await waitFor(() => {
@@ -416,7 +429,7 @@ describe('MapCard - Map Interaction and Navigation', () => {
       render(
         <StoreProvider>
           <MapCard />
-        </StoreProvider>
+        </StoreProvider>,
       );
 
       await waitFor(() => {
@@ -429,7 +442,7 @@ describe('MapCard - Map Interaction and Navigation', () => {
 
       // Try to zoom out below minimum
       mockMapInstance.zoomOut();
-      
+
       // Zoom should remain at minimum
       expect(mockZoom).toBe(1);
     });
@@ -440,7 +453,7 @@ describe('MapCard - Map Interaction and Navigation', () => {
       render(
         <StoreProvider>
           <MapCard />
-        </StoreProvider>
+        </StoreProvider>,
       );
 
       await waitFor(() => {
@@ -453,7 +466,7 @@ describe('MapCard - Map Interaction and Navigation', () => {
 
       // Try to zoom in above maximum
       mockMapInstance.zoomIn();
-      
+
       // Zoom should remain at maximum
       expect(mockZoom).toBe(18);
     });
@@ -464,7 +477,7 @@ describe('MapCard - Map Interaction and Navigation', () => {
       render(
         <StoreProvider>
           <MapCard />
-        </StoreProvider>
+        </StoreProvider>,
       );
 
       await waitFor(() => {
@@ -473,7 +486,7 @@ describe('MapCard - Map Interaction and Navigation', () => {
 
       // Test various zoom levels within range
       const validZoomLevels = [1, 5, 10, 15, 18];
-      
+
       for (const zoomLevel of validZoomLevels) {
         mockMapInstance.setZoom(zoomLevel);
         expect(mockZoom).toBe(zoomLevel);
@@ -486,7 +499,7 @@ describe('MapCard - Map Interaction and Navigation', () => {
       render(
         <StoreProvider>
           <MapCard />
-        </StoreProvider>
+        </StoreProvider>,
       );
 
       await waitFor(() => {
@@ -501,14 +514,14 @@ describe('MapCard - Map Interaction and Navigation', () => {
     it('maintains pin coordinates when map is panned', async () => {
       const mockLocations = [
         createMockLocation(1, 1.3521, 103.8198),
-        createMockLocation(2, 40.7128, -74.0060),
+        createMockLocation(2, 40.7128, -74.006),
       ];
       mockListLocations.mockResolvedValue({ locations: mockLocations });
 
       render(
         <StoreProvider>
           <MapCard />
-        </StoreProvider>
+        </StoreProvider>,
       );
 
       await waitFor(() => {
@@ -543,14 +556,14 @@ describe('MapCard - Map Interaction and Navigation', () => {
     it('maintains pin coordinates when map is zoomed', async () => {
       const mockLocations = [
         createMockLocation(1, 1.3521, 103.8198),
-        createMockLocation(2, 40.7128, -74.0060),
+        createMockLocation(2, 40.7128, -74.006),
       ];
       mockListLocations.mockResolvedValue({ locations: mockLocations });
 
       render(
         <StoreProvider>
           <MapCard />
-        </StoreProvider>
+        </StoreProvider>,
       );
 
       await waitFor(() => {
@@ -583,15 +596,13 @@ describe('MapCard - Map Interaction and Navigation', () => {
     });
 
     it('maintains pin coordinates during multiple pan and zoom operations', async () => {
-      const mockLocations = [
-        createMockLocation(1, 1.3521, 103.8198),
-      ];
+      const mockLocations = [createMockLocation(1, 1.3521, 103.8198)];
       mockListLocations.mockResolvedValue({ locations: mockLocations });
 
       render(
         <StoreProvider>
           <MapCard />
-        </StoreProvider>
+        </StoreProvider>,
       );
 
       await waitFor(() => {
@@ -624,15 +635,13 @@ describe('MapCard - Map Interaction and Navigation', () => {
     });
 
     it('updates pin positions within 100ms after pan/zoom', async () => {
-      const mockLocations = [
-        createMockLocation(1, 1.3521, 103.8198),
-      ];
+      const mockLocations = [createMockLocation(1, 1.3521, 103.8198)];
       mockListLocations.mockResolvedValue({ locations: mockLocations });
 
       render(
         <StoreProvider>
           <MapCard />
-        </StoreProvider>
+        </StoreProvider>,
       );
 
       await waitFor(() => {
@@ -651,7 +660,7 @@ describe('MapCard - Map Interaction and Navigation', () => {
           const marker = screen.getByTestId('location-marker');
           expect(marker).toBeInTheDocument();
         },
-        { timeout: 100 }
+        { timeout: 100 },
       );
 
       const endTime = Date.now();
@@ -664,7 +673,7 @@ describe('MapCard - Map Interaction and Navigation', () => {
     it('maintains all pins anchored when multiple locations exist', async () => {
       const mockLocations = [
         createMockLocation(1, 1.3521, 103.8198),
-        createMockLocation(2, 40.7128, -74.0060),
+        createMockLocation(2, 40.7128, -74.006),
         createMockLocation(3, -33.8688, 151.2093),
       ];
       mockListLocations.mockResolvedValue({ locations: mockLocations });
@@ -672,7 +681,7 @@ describe('MapCard - Map Interaction and Navigation', () => {
       render(
         <StoreProvider>
           <MapCard />
-        </StoreProvider>
+        </StoreProvider>,
       );
 
       await waitFor(() => {
@@ -682,7 +691,7 @@ describe('MapCard - Map Interaction and Navigation', () => {
 
       // Get initial coordinates for all markers
       const markers = screen.getAllByTestId('location-marker');
-      const initialCoords = markers.map(marker => ({
+      const initialCoords = markers.map((marker) => ({
         lat: marker.getAttribute('data-latitude'),
         lng: marker.getAttribute('data-longitude'),
       }));

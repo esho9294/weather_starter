@@ -4,9 +4,9 @@ import { FullscreenPortal } from './FullscreenPortal';
 
 /**
  * Unit tests for FullscreenPortal component
- * 
+ *
  * **Validates: Requirements 4.2, 4.4, 4.8, 4.11**
- * 
+ *
  * Tests cover:
  * - Portal rendering into document.body
  * - Body scroll prevention when open
@@ -31,11 +31,11 @@ describe('FullscreenPortal', () => {
   describe('portal rendering', () => {
     it('renders into document.body when open', () => {
       const onClose = vi.fn();
-      
+
       render(
         <FullscreenPortal isOpen={true} onClose={onClose}>
           <div data-testid="portal-content">Test Content</div>
-        </FullscreenPortal>
+        </FullscreenPortal>,
       );
 
       // Verify content is rendered
@@ -51,11 +51,11 @@ describe('FullscreenPortal', () => {
 
     it('does not render when isOpen is false', () => {
       const onClose = vi.fn();
-      
+
       render(
         <FullscreenPortal isOpen={false} onClose={onClose}>
           <div data-testid="portal-content">Test Content</div>
-        </FullscreenPortal>
+        </FullscreenPortal>,
       );
 
       // Verify content is not rendered
@@ -64,11 +64,11 @@ describe('FullscreenPortal', () => {
 
     it('renders close button with correct aria-label', () => {
       const onClose = vi.fn();
-      
+
       render(
         <FullscreenPortal isOpen={true} onClose={onClose}>
           <div>Test Content</div>
-        </FullscreenPortal>
+        </FullscreenPortal>,
       );
 
       const closeButton = screen.getByLabelText('Close fullscreen');
@@ -77,12 +77,12 @@ describe('FullscreenPortal', () => {
 
     it('renders children inside portal content area', () => {
       const onClose = vi.fn();
-      
+
       render(
         <FullscreenPortal isOpen={true} onClose={onClose}>
           <div data-testid="child-1">Child 1</div>
           <div data-testid="child-2">Child 2</div>
-        </FullscreenPortal>
+        </FullscreenPortal>,
       );
 
       expect(screen.getByTestId('child-1')).toBeInTheDocument();
@@ -93,14 +93,14 @@ describe('FullscreenPortal', () => {
   describe('body scroll prevention', () => {
     it('sets body overflow to hidden when portal opens', () => {
       const onClose = vi.fn();
-      
+
       // Verify initial state
       expect(document.body.style.overflow).toBe('');
 
       render(
         <FullscreenPortal isOpen={true} onClose={onClose}>
           <div>Test Content</div>
-        </FullscreenPortal>
+        </FullscreenPortal>,
       );
 
       // Verify body scroll is prevented
@@ -109,14 +109,14 @@ describe('FullscreenPortal', () => {
 
     it('does not set body overflow when portal is closed', () => {
       const onClose = vi.fn();
-      
+
       // Verify initial state
       expect(document.body.style.overflow).toBe('');
 
       render(
         <FullscreenPortal isOpen={false} onClose={onClose}>
           <div>Test Content</div>
-        </FullscreenPortal>
+        </FullscreenPortal>,
       );
 
       // Verify body overflow is not changed
@@ -125,14 +125,14 @@ describe('FullscreenPortal', () => {
 
     it('preserves existing body overflow value when portal is closed', () => {
       const onClose = vi.fn();
-      
+
       // Set initial overflow value
       document.body.style.overflow = 'auto';
 
       render(
         <FullscreenPortal isOpen={false} onClose={onClose}>
           <div>Test Content</div>
-        </FullscreenPortal>
+        </FullscreenPortal>,
       );
 
       // Verify existing value is preserved
@@ -143,11 +143,11 @@ describe('FullscreenPortal', () => {
   describe('body scroll restoration', () => {
     it('restores body overflow when portal closes', () => {
       const onClose = vi.fn();
-      
+
       const { rerender } = render(
         <FullscreenPortal isOpen={true} onClose={onClose}>
           <div>Test Content</div>
-        </FullscreenPortal>
+        </FullscreenPortal>,
       );
 
       // Verify body scroll is prevented
@@ -157,7 +157,7 @@ describe('FullscreenPortal', () => {
       rerender(
         <FullscreenPortal isOpen={false} onClose={onClose}>
           <div>Test Content</div>
-        </FullscreenPortal>
+        </FullscreenPortal>,
       );
 
       // Verify body overflow is restored to empty string
@@ -166,11 +166,11 @@ describe('FullscreenPortal', () => {
 
     it('restores body overflow when component unmounts', () => {
       const onClose = vi.fn();
-      
+
       const { unmount } = render(
         <FullscreenPortal isOpen={true} onClose={onClose}>
           <div>Test Content</div>
-        </FullscreenPortal>
+        </FullscreenPortal>,
       );
 
       // Verify body scroll is prevented
@@ -185,11 +185,11 @@ describe('FullscreenPortal', () => {
 
     it('handles multiple open/close cycles correctly', () => {
       const onClose = vi.fn();
-      
+
       const { rerender } = render(
         <FullscreenPortal isOpen={false} onClose={onClose}>
           <div>Test Content</div>
-        </FullscreenPortal>
+        </FullscreenPortal>,
       );
 
       // Initial state
@@ -199,7 +199,7 @@ describe('FullscreenPortal', () => {
       rerender(
         <FullscreenPortal isOpen={true} onClose={onClose}>
           <div>Test Content</div>
-        </FullscreenPortal>
+        </FullscreenPortal>,
       );
       expect(document.body.style.overflow).toBe('hidden');
 
@@ -207,7 +207,7 @@ describe('FullscreenPortal', () => {
       rerender(
         <FullscreenPortal isOpen={false} onClose={onClose}>
           <div>Test Content</div>
-        </FullscreenPortal>
+        </FullscreenPortal>,
       );
       expect(document.body.style.overflow).toBe('');
 
@@ -215,7 +215,7 @@ describe('FullscreenPortal', () => {
       rerender(
         <FullscreenPortal isOpen={true} onClose={onClose}>
           <div>Test Content</div>
-        </FullscreenPortal>
+        </FullscreenPortal>,
       );
       expect(document.body.style.overflow).toBe('hidden');
 
@@ -223,7 +223,7 @@ describe('FullscreenPortal', () => {
       rerender(
         <FullscreenPortal isOpen={false} onClose={onClose}>
           <div>Test Content</div>
-        </FullscreenPortal>
+        </FullscreenPortal>,
       );
       expect(document.body.style.overflow).toBe('');
     });
@@ -232,11 +232,11 @@ describe('FullscreenPortal', () => {
   describe('close button functionality', () => {
     it('calls onClose when close button is clicked', () => {
       const onClose = vi.fn();
-      
+
       render(
         <FullscreenPortal isOpen={true} onClose={onClose}>
           <div>Test Content</div>
-        </FullscreenPortal>
+        </FullscreenPortal>,
       );
 
       const closeButton = screen.getByLabelText('Close fullscreen');
@@ -247,11 +247,11 @@ describe('FullscreenPortal', () => {
 
     it('calls onClose only once per click', () => {
       const onClose = vi.fn();
-      
+
       render(
         <FullscreenPortal isOpen={true} onClose={onClose}>
           <div>Test Content</div>
-        </FullscreenPortal>
+        </FullscreenPortal>,
       );
 
       const closeButton = screen.getByLabelText('Close fullscreen');
@@ -264,11 +264,11 @@ describe('FullscreenPortal', () => {
 
     it('does not call onClose when portal is closed', () => {
       const onClose = vi.fn();
-      
+
       render(
         <FullscreenPortal isOpen={false} onClose={onClose}>
           <div>Test Content</div>
-        </FullscreenPortal>
+        </FullscreenPortal>,
       );
 
       // Close button should not be rendered when portal is closed
@@ -280,11 +280,11 @@ describe('FullscreenPortal', () => {
   describe('Escape key functionality', () => {
     it('calls onClose when Escape key is pressed while portal is open', () => {
       const onClose = vi.fn();
-      
+
       render(
         <FullscreenPortal isOpen={true} onClose={onClose}>
           <div>Test Content</div>
-        </FullscreenPortal>
+        </FullscreenPortal>,
       );
 
       // Press Escape key
@@ -295,11 +295,11 @@ describe('FullscreenPortal', () => {
 
     it('does not call onClose when Escape is pressed while portal is closed', () => {
       const onClose = vi.fn();
-      
+
       render(
         <FullscreenPortal isOpen={false} onClose={onClose}>
           <div>Test Content</div>
-        </FullscreenPortal>
+        </FullscreenPortal>,
       );
 
       // Press Escape key
@@ -310,11 +310,11 @@ describe('FullscreenPortal', () => {
 
     it('does not call onClose when other keys are pressed', () => {
       const onClose = vi.fn();
-      
+
       render(
         <FullscreenPortal isOpen={true} onClose={onClose}>
           <div>Test Content</div>
-        </FullscreenPortal>
+        </FullscreenPortal>,
       );
 
       // Press various other keys
@@ -328,11 +328,11 @@ describe('FullscreenPortal', () => {
 
     it('handles multiple Escape key presses', () => {
       const onClose = vi.fn();
-      
+
       render(
         <FullscreenPortal isOpen={true} onClose={onClose}>
           <div>Test Content</div>
-        </FullscreenPortal>
+        </FullscreenPortal>,
       );
 
       // Press Escape key multiple times
@@ -346,29 +346,29 @@ describe('FullscreenPortal', () => {
     it('removes event listener when component unmounts', () => {
       const onClose = vi.fn();
       const removeEventListenerSpy = vi.spyOn(window, 'removeEventListener');
-      
+
       const { unmount } = render(
         <FullscreenPortal isOpen={true} onClose={onClose}>
           <div>Test Content</div>
-        </FullscreenPortal>
+        </FullscreenPortal>,
       );
 
       unmount();
 
       // Verify removeEventListener was called for keydown event
       expect(removeEventListenerSpy).toHaveBeenCalledWith('keydown', expect.any(Function));
-      
+
       removeEventListenerSpy.mockRestore();
     });
 
     it('updates event listener when onClose callback changes', () => {
       const onClose1 = vi.fn();
       const onClose2 = vi.fn();
-      
+
       const { rerender } = render(
         <FullscreenPortal isOpen={true} onClose={onClose1}>
           <div>Test Content</div>
-        </FullscreenPortal>
+        </FullscreenPortal>,
       );
 
       // Press Escape with first callback
@@ -380,7 +380,7 @@ describe('FullscreenPortal', () => {
       rerender(
         <FullscreenPortal isOpen={true} onClose={onClose2}>
           <div>Test Content</div>
-        </FullscreenPortal>
+        </FullscreenPortal>,
       );
 
       // Press Escape with second callback
@@ -393,31 +393,31 @@ describe('FullscreenPortal', () => {
   describe('portal styling', () => {
     it('applies correct fullscreen overlay classes', () => {
       const onClose = vi.fn();
-      
+
       render(
         <FullscreenPortal isOpen={true} onClose={onClose}>
           <div data-testid="portal-content">Test Content</div>
-        </FullscreenPortal>
+        </FullscreenPortal>,
       );
 
       const content = screen.getByTestId('portal-content');
       const portalContainer = content.closest('.fixed.inset-0.z-50.bg-black');
-      
+
       expect(portalContainer).toBeInTheDocument();
       expect(portalContainer).toHaveClass('fixed', 'inset-0', 'z-50', 'bg-black');
     });
 
     it('applies correct close button styling classes', () => {
       const onClose = vi.fn();
-      
+
       render(
         <FullscreenPortal isOpen={true} onClose={onClose}>
           <div>Test Content</div>
-        </FullscreenPortal>
+        </FullscreenPortal>,
       );
 
       const closeButton = screen.getByLabelText('Close fullscreen');
-      
+
       expect(closeButton).toHaveClass(
         'absolute',
         'right-4',
@@ -428,22 +428,22 @@ describe('FullscreenPortal', () => {
         'p-2',
         'shadow-lg',
         'backdrop-blur-sm',
-        'hover:bg-white'
+        'hover:bg-white',
       );
     });
 
     it('renders close button icon with correct attributes', () => {
       const onClose = vi.fn();
-      
+
       render(
         <FullscreenPortal isOpen={true} onClose={onClose}>
           <div>Test Content</div>
-        </FullscreenPortal>
+        </FullscreenPortal>,
       );
 
       const closeButton = screen.getByLabelText('Close fullscreen');
       const svg = closeButton.querySelector('svg');
-      
+
       expect(svg).toBeInTheDocument();
       expect(svg).toHaveClass('h-5', 'w-5', 'text-gray-700');
       expect(svg?.getAttribute('viewBox')).toBe('0 0 24 24');

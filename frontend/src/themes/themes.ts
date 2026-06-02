@@ -34,7 +34,8 @@ export const themes: Record<string, Theme> = {
     id: 'apple',
     name: 'Apple',
     colors: {
-      background: 'radial-gradient(120% 80% at 70% 0%, rgba(255, 255, 255, 0.18) 0%, transparent 55%), radial-gradient(90% 70% at 10% 100%, rgba(80, 110, 150, 0.55) 0%, transparent 60%), linear-gradient(170deg, #6f8aa8 0%, #5a7591 35%, #4a627c 65%, #3c5066 100%)',
+      background:
+        'radial-gradient(120% 80% at 70% 0%, rgba(255, 255, 255, 0.18) 0%, transparent 55%), radial-gradient(90% 70% at 10% 100%, rgba(80, 110, 150, 0.55) 0%, transparent 60%), linear-gradient(170deg, #6f8aa8 0%, #5a7591 35%, #4a627c 65%, #3c5066 100%)',
       text: '#ffffff',
       textSecondary: 'rgba(255, 255, 255, 0.9)',
       textTertiary: 'rgba(255, 255, 255, 0.7)',
@@ -64,7 +65,8 @@ export const themes: Record<string, Theme> = {
     id: 'arcticFrost',
     name: 'Arctic Frost',
     colors: {
-      background: 'radial-gradient(circle at 20% 50%, rgba(224, 242, 254, 0.4) 0%, transparent 50%), radial-gradient(circle at 80% 80%, rgba(186, 230, 253, 0.3) 0%, transparent 50%), linear-gradient(180deg, #f0f9ff 0%, #e0f2fe 50%, #bae6fd 100%)',
+      background:
+        'radial-gradient(circle at 20% 50%, rgba(224, 242, 254, 0.4) 0%, transparent 50%), radial-gradient(circle at 80% 80%, rgba(186, 230, 253, 0.3) 0%, transparent 50%), linear-gradient(180deg, #f0f9ff 0%, #e0f2fe 50%, #bae6fd 100%)',
       text: '#000000',
       textSecondary: '#1e293b',
       textTertiary: '#475569',
@@ -94,7 +96,8 @@ export const themes: Record<string, Theme> = {
     id: 'sunsetGradient',
     name: 'Sunset Gradient',
     colors: {
-      background: 'radial-gradient(circle at 30% 20%, rgba(251, 146, 60, 0.3) 0%, transparent 50%), radial-gradient(circle at 70% 60%, rgba(236, 72, 153, 0.25) 0%, transparent 50%), linear-gradient(135deg, #fb923c 0%, #f97316 25%, #ec4899 60%, #a855f7 100%)',
+      background:
+        'radial-gradient(circle at 30% 20%, rgba(251, 146, 60, 0.3) 0%, transparent 50%), radial-gradient(circle at 70% 60%, rgba(236, 72, 153, 0.25) 0%, transparent 50%), linear-gradient(135deg, #fb923c 0%, #f97316 25%, #ec4899 60%, #a855f7 100%)',
       text: '#fef3c7',
       textSecondary: '#fde68a',
       textTertiary: '#fcd34d',
@@ -124,7 +127,8 @@ export const themes: Record<string, Theme> = {
     id: 'darkStorm',
     name: 'Dark Storm',
     colors: {
-      background: 'radial-gradient(circle at 50% 0%, rgba(59, 130, 246, 0.15) 0%, transparent 50%), radial-gradient(circle at 80% 100%, rgba(251, 191, 36, 0.1) 0%, transparent 50%), linear-gradient(180deg, #000000 0%, #18181b 50%, #27272a 100%)',
+      background:
+        'radial-gradient(circle at 50% 0%, rgba(59, 130, 246, 0.15) 0%, transparent 50%), radial-gradient(circle at 80% 100%, rgba(251, 191, 36, 0.1) 0%, transparent 50%), linear-gradient(180deg, #000000 0%, #18181b 50%, #27272a 100%)',
       text: '#ffffff',
       textSecondary: '#e4e4e7',
       textTertiary: '#a1a1aa',
@@ -154,7 +158,8 @@ export const themes: Record<string, Theme> = {
     id: 'botanicalGarden',
     name: 'Botanical Garden',
     colors: {
-      background: 'radial-gradient(circle at 20% 30%, rgba(132, 204, 22, 0.15) 0%, transparent 50%), radial-gradient(circle at 80% 70%, rgba(234, 88, 12, 0.1) 0%, transparent 50%), linear-gradient(160deg, #84cc16 0%, #65a30d 35%, #166534 70%, #14532d 100%)',
+      background:
+        'radial-gradient(circle at 20% 30%, rgba(132, 204, 22, 0.15) 0%, transparent 50%), radial-gradient(circle at 80% 70%, rgba(234, 88, 12, 0.1) 0%, transparent 50%), linear-gradient(160deg, #84cc16 0%, #65a30d 35%, #166534 70%, #14532d 100%)',
       text: '#fef3c7',
       textSecondary: '#fef08a',
       textTertiary: '#d9f99d',
@@ -184,7 +189,8 @@ export const themes: Record<string, Theme> = {
     id: 'neonCyberpunk',
     name: 'Neon Cyberpunk',
     colors: {
-      background: 'radial-gradient(circle at 30% 20%, rgba(34, 211, 238, 0.2) 0%, transparent 40%), radial-gradient(circle at 70% 80%, rgba(244, 114, 182, 0.2) 0%, transparent 40%), linear-gradient(180deg, #1e1b4b 0%, #1e1b4b 50%, #0f172a 100%)',
+      background:
+        'radial-gradient(circle at 30% 20%, rgba(34, 211, 238, 0.2) 0%, transparent 40%), radial-gradient(circle at 70% 80%, rgba(244, 114, 182, 0.2) 0%, transparent 40%), linear-gradient(180deg, #1e1b4b 0%, #1e1b4b 50%, #0f172a 100%)',
       text: '#22d3ee',
       textSecondary: '#a5f3fc',
       textTertiary: '#67e8f9',
@@ -203,7 +209,8 @@ export const themes: Record<string, Theme> = {
     effects: {
       cardRadius: '2px',
       cardBlur: '10px',
-      cardShadow: '0 0 20px rgba(34, 211, 238, 0.4), 0 0 40px rgba(244, 114, 182, 0.2), 0 0 0 1px rgba(34, 211, 238, 0.6)',
+      cardShadow:
+        '0 0 20px rgba(34, 211, 238, 0.4), 0 0 40px rgba(244, 114, 182, 0.2), 0 0 0 1px rgba(34, 211, 238, 0.6)',
     },
     spacing: {
       cardPadding: '12px',
@@ -244,7 +251,8 @@ export const themes: Record<string, Theme> = {
     id: 'minimalistPaper',
     name: 'Minimalist Paper',
     colors: {
-      background: 'radial-gradient(circle at 50% 50%, rgba(250, 250, 249, 1) 0%, rgba(245, 245, 244, 1) 100%)',
+      background:
+        'radial-gradient(circle at 50% 50%, rgba(250, 250, 249, 1) 0%, rgba(245, 245, 244, 1) 100%)',
       text: '#292524',
       textSecondary: '#44403c',
       textTertiary: '#78716c',

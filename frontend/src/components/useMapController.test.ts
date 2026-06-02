@@ -5,11 +5,7 @@ import type { Map as LeafletMap } from 'leaflet';
 import type { Location } from '../types';
 
 // Helper function to create a mock location
-function createMockLocation(
-  id: number,
-  latitude: number,
-  longitude: number
-): Location {
+function createMockLocation(id: number, latitude: number, longitude: number): Location {
   return {
     id,
     latitude,
@@ -106,7 +102,7 @@ describe('useMapController', () => {
           maxZoom: 15,
           animate: true,
           duration: 0.5,
-        }
+        },
       );
     });
 
@@ -133,7 +129,7 @@ describe('useMapController', () => {
           maxZoom: 15,
           animate: true,
           duration: 0.5,
-        }
+        },
       );
     });
 
@@ -174,7 +170,7 @@ describe('useMapController', () => {
             lng: 103.8198,
           }),
         }),
-        expect.any(Object)
+        expect.any(Object),
       );
 
       // Should log errors for invalid coordinates
@@ -219,14 +215,11 @@ describe('useMapController', () => {
 
     it('resets debounce timer when locations change', () => {
       const mapInstance = createMockMapInstance();
-      const { rerender } = renderHook(
-        ({ locs }) => useMapController(mapInstance, locs, false),
-        {
-          initialProps: {
-            locs: [createMockLocation(1, 1.3521, 103.8198)],
-          },
-        }
-      );
+      const { rerender } = renderHook(({ locs }) => useMapController(mapInstance, locs, false), {
+        initialProps: {
+          locs: [createMockLocation(1, 1.3521, 103.8198)],
+        },
+      });
 
       // Advance time by 400ms
       vi.advanceTimersByTime(400);
@@ -234,10 +227,7 @@ describe('useMapController', () => {
 
       // Change locations (add a new one)
       rerender({
-        locs: [
-          createMockLocation(1, 1.3521, 103.8198),
-          createMockLocation(2, 40.7128, -74.006),
-        ],
+        locs: [createMockLocation(1, 1.3521, 103.8198), createMockLocation(2, 40.7128, -74.006)],
       });
 
       // Advance time by 400ms (total 800ms from start, but only 400ms from rerender)
@@ -253,9 +243,7 @@ describe('useMapController', () => {
       const mapInstance = createMockMapInstance();
       const locations = [createMockLocation(1, 1.3521, 103.8198)];
 
-      const { unmount } = renderHook(() =>
-        useMapController(mapInstance, locations, false)
-      );
+      const { unmount } = renderHook(() => useMapController(mapInstance, locations, false));
 
       // Advance time by 400ms
       vi.advanceTimersByTime(400);
@@ -277,11 +265,10 @@ describe('useMapController', () => {
       const locations = [createMockLocation(1, 1.3521, 103.8198)];
 
       const { rerender } = renderHook(
-        ({ isFullscreen }) =>
-          useMapController(mapInstance, locations, isFullscreen),
+        ({ isFullscreen }) => useMapController(mapInstance, locations, isFullscreen),
         {
           initialProps: { isFullscreen: false },
-        }
+        },
       );
 
       // Enter fullscreen
@@ -297,11 +284,10 @@ describe('useMapController', () => {
       const locations = [createMockLocation(1, 1.3521, 103.8198)];
 
       const { rerender } = renderHook(
-        ({ isFullscreen }) =>
-          useMapController(mapInstance, locations, isFullscreen),
+        ({ isFullscreen }) => useMapController(mapInstance, locations, isFullscreen),
         {
           initialProps: { isFullscreen: false },
-        }
+        },
       );
 
       // Enter fullscreen
@@ -311,11 +297,9 @@ describe('useMapController', () => {
       rerender({ isFullscreen: false });
 
       // Should restore the preserved state
-      expect(mapInstance.setView).toHaveBeenCalledWith(
-        { lat: 1.3521, lng: 103.8198 },
-        11,
-        { animate: false }
-      );
+      expect(mapInstance.setView).toHaveBeenCalledWith({ lat: 1.3521, lng: 103.8198 }, 11, {
+        animate: false,
+      });
     });
 
     it('does not restore state when entering fullscreen', () => {
@@ -323,11 +307,10 @@ describe('useMapController', () => {
       const locations = [createMockLocation(1, 1.3521, 103.8198)];
 
       const { rerender } = renderHook(
-        ({ isFullscreen }) =>
-          useMapController(mapInstance, locations, isFullscreen),
+        ({ isFullscreen }) => useMapController(mapInstance, locations, isFullscreen),
         {
           initialProps: { isFullscreen: false },
-        }
+        },
       );
 
       // Enter fullscreen
@@ -342,11 +325,10 @@ describe('useMapController', () => {
       const locations = [createMockLocation(1, 1.3521, 103.8198)];
 
       const { rerender } = renderHook(
-        ({ isFullscreen }) =>
-          useMapController(mapInstance, locations, isFullscreen),
+        ({ isFullscreen }) => useMapController(mapInstance, locations, isFullscreen),
         {
           initialProps: { isFullscreen: false },
-        }
+        },
       );
 
       // Stay in card mode
@@ -361,11 +343,10 @@ describe('useMapController', () => {
       const locations = [createMockLocation(1, 1.3521, 103.8198)];
 
       const { rerender } = renderHook(
-        ({ isFullscreen }) =>
-          useMapController(mapInstance, locations, isFullscreen),
+        ({ isFullscreen }) => useMapController(mapInstance, locations, isFullscreen),
         {
           initialProps: { isFullscreen: false },
-        }
+        },
       );
 
       // First transition: enter fullscreen
@@ -392,14 +373,11 @@ describe('useMapController', () => {
     it('triggers fitBounds when locations are added', () => {
       const mapInstance = createMockMapInstance();
 
-      const { rerender } = renderHook(
-        ({ locs }) => useMapController(mapInstance, locs, false),
-        {
-          initialProps: {
-            locs: [createMockLocation(1, 1.3521, 103.8198)],
-          },
-        }
-      );
+      const { rerender } = renderHook(({ locs }) => useMapController(mapInstance, locs, false), {
+        initialProps: {
+          locs: [createMockLocation(1, 1.3521, 103.8198)],
+        },
+      });
 
       // Wait for initial debounce
       vi.advanceTimersByTime(500);
@@ -407,10 +385,7 @@ describe('useMapController', () => {
 
       // Add a new location
       rerender({
-        locs: [
-          createMockLocation(1, 1.3521, 103.8198),
-          createMockLocation(2, 40.7128, -74.006),
-        ],
+        locs: [createMockLocation(1, 1.3521, 103.8198), createMockLocation(2, 40.7128, -74.006)],
       });
 
       // Wait for debounce
@@ -421,17 +396,11 @@ describe('useMapController', () => {
     it('triggers fitBounds when locations are removed', () => {
       const mapInstance = createMockMapInstance();
 
-      const { rerender } = renderHook(
-        ({ locs }) => useMapController(mapInstance, locs, false),
-        {
-          initialProps: {
-            locs: [
-              createMockLocation(1, 1.3521, 103.8198),
-              createMockLocation(2, 40.7128, -74.006),
-            ],
-          },
-        }
-      );
+      const { rerender } = renderHook(({ locs }) => useMapController(mapInstance, locs, false), {
+        initialProps: {
+          locs: [createMockLocation(1, 1.3521, 103.8198), createMockLocation(2, 40.7128, -74.006)],
+        },
+      });
 
       // Wait for initial debounce
       vi.advanceTimersByTime(500);
@@ -450,14 +419,11 @@ describe('useMapController', () => {
     it('does not call fitBounds when all locations are removed', () => {
       const mapInstance = createMockMapInstance();
 
-      const { rerender } = renderHook(
-        ({ locs }) => useMapController(mapInstance, locs, false),
-        {
-          initialProps: {
-            locs: [createMockLocation(1, 1.3521, 103.8198)],
-          },
-        }
-      );
+      const { rerender } = renderHook(({ locs }) => useMapController(mapInstance, locs, false), {
+        initialProps: {
+          locs: [createMockLocation(1, 1.3521, 103.8198)],
+        },
+      });
 
       // Wait for initial debounce
       vi.advanceTimersByTime(500);
@@ -478,12 +444,9 @@ describe('useMapController', () => {
     it('handles mapInstance becoming available after initialization', () => {
       const locations = [createMockLocation(1, 1.3521, 103.8198)];
 
-      const { rerender } = renderHook(
-        ({ map }) => useMapController(map, locations, false),
-        {
-          initialProps: { map: null as LeafletMap | null },
-        }
-      );
+      const { rerender } = renderHook(({ map }) => useMapController(map, locations, false), {
+        initialProps: { map: null as LeafletMap | null },
+      });
 
       // Wait for debounce with null map
       vi.advanceTimersByTime(500);
@@ -503,12 +466,9 @@ describe('useMapController', () => {
       const mapInstance = createMockMapInstance();
       const locations = [createMockLocation(1, 1.3521, 103.8198)];
 
-      const { rerender } = renderHook(
-        ({ map }) => useMapController(map, locations, false),
-        {
-          initialProps: { map: mapInstance as LeafletMap | null },
-        }
-      );
+      const { rerender } = renderHook(({ map }) => useMapController(map, locations, false), {
+        initialProps: { map: mapInstance as LeafletMap | null },
+      });
 
       // Wait for initial debounce
       vi.advanceTimersByTime(500);
@@ -530,22 +490,16 @@ describe('useMapController', () => {
     it('handles rapid location changes with debouncing', () => {
       const mapInstance = createMockMapInstance();
 
-      const { rerender } = renderHook(
-        ({ locs }) => useMapController(mapInstance, locs, false),
-        {
-          initialProps: {
-            locs: [createMockLocation(1, 1.3521, 103.8198)],
-          },
-        }
-      );
+      const { rerender } = renderHook(({ locs }) => useMapController(mapInstance, locs, false), {
+        initialProps: {
+          locs: [createMockLocation(1, 1.3521, 103.8198)],
+        },
+      });
 
       // Rapid changes
       vi.advanceTimersByTime(100);
       rerender({
-        locs: [
-          createMockLocation(1, 1.3521, 103.8198),
-          createMockLocation(2, 40.7128, -74.006),
-        ],
+        locs: [createMockLocation(1, 1.3521, 103.8198), createMockLocation(2, 40.7128, -74.006)],
       });
 
       vi.advanceTimersByTime(100);

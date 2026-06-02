@@ -4,7 +4,10 @@
 
 :root {
   /* Default theme variables - will be overridden by ThemeProvider */
-  --theme-bg: radial-gradient(120% 80% at 70% 0%, rgba(255, 255, 255, 0.18) 0%, transparent 55%), radial-gradient(90% 70% at 10% 100%, rgba(80, 110, 150, 0.55) 0%, transparent 60%), linear-gradient(170deg, #6f8aa8 0%, #5a7591 35%, #4a627c 65%, #3c5066 100%);
+  --theme-bg:
+    radial-gradient(120% 80% at 70% 0%, rgba(255, 255, 255, 0.18) 0%, transparent 55%),
+    radial-gradient(90% 70% at 10% 100%, rgba(80, 110, 150, 0.55) 0%, transparent 60%),
+    linear-gradient(170deg, #6f8aa8 0%, #5a7591 35%, #4a627c 65%, #3c5066 100%);
   --theme-text: #ffffff;
   --theme-text-secondary: rgba(255, 255, 255, 0.9);
   --theme-text-tertiary: rgba(255, 255, 255, 0.7);
@@ -14,7 +17,7 @@
   --theme-button-hover: rgba(255, 255, 255, 0.14);
   --theme-button-text: rgba(255, 255, 255, 0.85);
   --theme-accent: #0ea5e9;
-  --theme-font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --theme-font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   --theme-heading-weight: 300;
   --theme-body-weight: 400;
   --theme-card-radius: 16px;
@@ -66,32 +69,32 @@ input:focus-visible {
 
 /* Override Tailwind text-white classes to use theme variables */
 /* Using attribute selectors for better specificity */
-[class*="text-white"] {
+[class*='text-white'] {
   color: var(--theme-text) !important;
 }
 
-[class*="text-white/95"],
-[class*="text-white/90"],
-[class*="text-white/85"],
-[class*="text-white/80"] {
+[class*='text-white/95'],
+[class*='text-white/90'],
+[class*='text-white/85'],
+[class*='text-white/80'] {
   color: var(--theme-text-secondary) !important;
 }
 
-[class*="text-white/75"],
-[class*="text-white/70"],
-[class*="text-white/60"],
-[class*="text-white/55"],
-[class*="text-white/50"],
-[class*="text-white/40"] {
+[class*='text-white/75'],
+[class*='text-white/70'],
+[class*='text-white/60'],
+[class*='text-white/55'],
+[class*='text-white/50'],
+[class*='text-white/40'] {
   color: var(--theme-text-tertiary) !important;
 }
 
 /* Button text on light backgrounds */
-[class*="text-slate-900"] {
+[class*='text-slate-900'] {
   color: var(--theme-button-text) !important;
 }
 
 /* Placeholder text colors */
-[class*="placeholder:text-white"]::placeholder {
+[class*='placeholder:text-white']::placeholder {
   color: var(--theme-text-tertiary) !important;
 }

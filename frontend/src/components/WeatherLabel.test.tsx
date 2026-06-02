@@ -5,9 +5,9 @@ import type { WeatherSnapshot } from '../types';
 
 /**
  * Unit tests for WeatherLabel component
- * 
+ *
  * **Validates: Requirements 3.2, 3.3, 3.6, 3.7**
- * 
+ *
  * Test Coverage:
  * - Temperature display when available (Requirement 3.2)
  * - Condition display when temperature unavailable (Requirement 3.3)
@@ -48,49 +48,49 @@ describe('WeatherLabel', () => {
     it('displays temperature in "{temp}°C" format when temperature is available', () => {
       const weather = createWeatherSnapshot({ temperature_c: 28.5 });
       render(<WeatherLabel weather={weather} />);
-      
+
       expect(screen.getByText('29°C')).toBeInTheDocument();
     });
 
     it('rounds temperature correctly (down)', () => {
       const weather = createWeatherSnapshot({ temperature_c: 28.4 });
       render(<WeatherLabel weather={weather} />);
-      
+
       expect(screen.getByText('28°C')).toBeInTheDocument();
     });
 
     it('rounds temperature correctly (up)', () => {
       const weather = createWeatherSnapshot({ temperature_c: 28.6 });
       render(<WeatherLabel weather={weather} />);
-      
+
       expect(screen.getByText('29°C')).toBeInTheDocument();
     });
 
     it('handles zero temperature correctly', () => {
       const weather = createWeatherSnapshot({ temperature_c: 0 });
       render(<WeatherLabel weather={weather} />);
-      
+
       expect(screen.getByText('0°C')).toBeInTheDocument();
     });
 
     it('handles negative temperature correctly', () => {
       const weather = createWeatherSnapshot({ temperature_c: -5 });
       render(<WeatherLabel weather={weather} />);
-      
+
       expect(screen.getByText('-5°C')).toBeInTheDocument();
     });
 
     it('handles very high temperature', () => {
       const weather = createWeatherSnapshot({ temperature_c: 45.7 });
       render(<WeatherLabel weather={weather} />);
-      
+
       expect(screen.getByText('46°C')).toBeInTheDocument();
     });
 
     it('handles very low temperature', () => {
       const weather = createWeatherSnapshot({ temperature_c: -40.3 });
       render(<WeatherLabel weather={weather} />);
-      
+
       expect(screen.getByText('-40°C')).toBeInTheDocument();
     });
   });
@@ -102,7 +102,7 @@ describe('WeatherLabel', () => {
         condition: 'Partly Cloudy',
       });
       render(<WeatherLabel weather={weather} />);
-      
+
       expect(screen.getByText('Partly Cloudy')).toBeInTheDocument();
     });
 
@@ -112,7 +112,7 @@ describe('WeatherLabel', () => {
         condition: 'Heavy Thunderstorms',
       });
       render(<WeatherLabel weather={weather} />);
-      
+
       expect(screen.getByText('Heavy Thunderstorms')).toBeInTheDocument();
     });
 
@@ -122,7 +122,7 @@ describe('WeatherLabel', () => {
         condition: '',
       });
       render(<WeatherLabel weather={weather} />);
-      
+
       // Empty string is falsy, should show placeholder
       expect(screen.getByText('--')).toBeInTheDocument();
     });
@@ -135,7 +135,7 @@ describe('WeatherLabel', () => {
         condition: null,
       });
       render(<WeatherLabel weather={weather} />);
-      
+
       expect(screen.getByText('--')).toBeInTheDocument();
     });
 
@@ -145,7 +145,7 @@ describe('WeatherLabel', () => {
         condition: '',
       });
       render(<WeatherLabel weather={weather} />);
-      
+
       expect(screen.getByText('--')).toBeInTheDocument();
     });
   });
@@ -157,7 +157,7 @@ describe('WeatherLabel', () => {
         condition: 'Sunny',
       });
       render(<WeatherLabel weather={weather} />);
-      
+
       // Should show temperature, not condition
       expect(screen.getByText('25°C')).toBeInTheDocument();
       expect(screen.queryByText('Sunny')).not.toBeInTheDocument();
@@ -169,7 +169,7 @@ describe('WeatherLabel', () => {
         condition: 'Rainy',
       });
       render(<WeatherLabel weather={weather} />);
-      
+
       expect(screen.getByText('Rainy')).toBeInTheDocument();
     });
 
@@ -179,7 +179,7 @@ describe('WeatherLabel', () => {
         condition: 'Cloudy',
       });
       render(<WeatherLabel weather={weather} />);
-      
+
       expect(screen.getByText('Cloudy')).toBeInTheDocument();
     });
   });
@@ -188,7 +188,7 @@ describe('WeatherLabel', () => {
     it('renders with correct positioning styles for "above" position', () => {
       const weather = createWeatherSnapshot({ temperature_c: 25 });
       const { container } = render(<WeatherLabel weather={weather} position="above" />);
-      
+
       const outerDiv = container.firstChild as HTMLElement;
       expect(outerDiv).toHaveClass('absolute');
       expect(outerDiv).toHaveClass('left-1/2');
@@ -199,7 +199,7 @@ describe('WeatherLabel', () => {
     it('renders with correct positioning styles for "below" position', () => {
       const weather = createWeatherSnapshot({ temperature_c: 25 });
       const { container } = render(<WeatherLabel weather={weather} position="below" />);
-      
+
       const outerDiv = container.firstChild as HTMLElement;
       expect(outerDiv.style.top).toBe('20px');
     });
@@ -207,7 +207,7 @@ describe('WeatherLabel', () => {
     it('defaults to "above" position when position prop is not provided', () => {
       const weather = createWeatherSnapshot({ temperature_c: 25 });
       const { container } = render(<WeatherLabel weather={weather} />);
-      
+
       const outerDiv = container.firstChild as HTMLElement;
       expect(outerDiv.style.bottom).toBe('20px');
     });
@@ -215,7 +215,7 @@ describe('WeatherLabel', () => {
     it('renders with semi-transparent background (Requirement 3.7)', () => {
       const weather = createWeatherSnapshot({ temperature_c: 25 });
       const { container } = render(<WeatherLabel weather={weather} />);
-      
+
       const innerDiv = container.querySelector('.rounded-md') as HTMLElement;
       expect(innerDiv.style.backgroundColor).toBe('rgba(0, 0, 0, 0.8)');
     });
@@ -223,7 +223,7 @@ describe('WeatherLabel', () => {
     it('renders with correct font size (Requirement 3.7)', () => {
       const weather = createWeatherSnapshot({ temperature_c: 25 });
       const { container } = render(<WeatherLabel weather={weather} />);
-      
+
       const innerDiv = container.querySelector('.rounded-md') as HTMLElement;
       expect(innerDiv.style.fontSize).toBe('12px');
     });
@@ -231,7 +231,7 @@ describe('WeatherLabel', () => {
     it('renders with correct padding (Requirement 3.7)', () => {
       const weather = createWeatherSnapshot({ temperature_c: 25 });
       const { container } = render(<WeatherLabel weather={weather} />);
-      
+
       const innerDiv = container.querySelector('.rounded-md') as HTMLElement;
       expect(innerDiv.style.padding).toBe('4px 8px');
     });
@@ -239,7 +239,7 @@ describe('WeatherLabel', () => {
     it('renders with correct border radius (Requirement 3.7)', () => {
       const weather = createWeatherSnapshot({ temperature_c: 25 });
       const { container } = render(<WeatherLabel weather={weather} />);
-      
+
       const innerDiv = container.querySelector('.rounded-md') as HTMLElement;
       expect(innerDiv.style.borderRadius).toBe('6px');
     });
@@ -247,7 +247,7 @@ describe('WeatherLabel', () => {
     it('renders with white text color', () => {
       const weather = createWeatherSnapshot({ temperature_c: 25 });
       const { container } = render(<WeatherLabel weather={weather} />);
-      
+
       const innerDiv = container.querySelector('.rounded-md') as HTMLElement;
       expect(innerDiv).toHaveClass('text-white');
     });
@@ -255,7 +255,7 @@ describe('WeatherLabel', () => {
     it('renders with pointer-events-none to allow click-through', () => {
       const weather = createWeatherSnapshot({ temperature_c: 25 });
       const { container } = render(<WeatherLabel weather={weather} />);
-      
+
       const outerDiv = container.firstChild as HTMLElement;
       expect(outerDiv).toHaveClass('pointer-events-none');
     });
@@ -266,7 +266,7 @@ describe('WeatherLabel', () => {
         condition: 'Very Long Weather Condition Text',
       });
       const { container } = render(<WeatherLabel weather={weather} />);
-      
+
       const outerDiv = container.firstChild as HTMLElement;
       expect(outerDiv).toHaveClass('whitespace-nowrap');
     });
@@ -276,21 +276,21 @@ describe('WeatherLabel', () => {
     it('handles decimal temperature values correctly', () => {
       const weather = createWeatherSnapshot({ temperature_c: 23.7 });
       render(<WeatherLabel weather={weather} />);
-      
+
       expect(screen.getByText('24°C')).toBeInTheDocument();
     });
 
     it('handles temperature exactly at 0.5 (rounds up)', () => {
       const weather = createWeatherSnapshot({ temperature_c: 0.5 });
       render(<WeatherLabel weather={weather} />);
-      
+
       expect(screen.getByText('1°C')).toBeInTheDocument();
     });
 
     it('handles temperature exactly at -0.5 (rounds up to 0)', () => {
       const weather = createWeatherSnapshot({ temperature_c: -0.5 });
       render(<WeatherLabel weather={weather} />);
-      
+
       expect(screen.getByText('0°C')).toBeInTheDocument();
     });
 
@@ -300,7 +300,7 @@ describe('WeatherLabel', () => {
         condition: null,
       });
       render(<WeatherLabel weather={weather} />);
-      
+
       expect(screen.getByText('--')).toBeInTheDocument();
     });
 
@@ -310,7 +310,7 @@ describe('WeatherLabel', () => {
         condition: 'Sunny',
       });
       render(<WeatherLabel weather={weather} />);
-      
+
       expect(screen.getByText('Sunny')).toBeInTheDocument();
     });
   });

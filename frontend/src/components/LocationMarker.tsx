@@ -23,17 +23,17 @@ function LocationMarkerComponent({
   // Determine what to display based on available weather data
   const getDisplayText = (): string => {
     const { weather } = location;
-    
+
     // Priority 1: Temperature
     if (weather.temperature_c !== null && weather.temperature_c !== undefined) {
       return `${Math.round(weather.temperature_c)}°C`;
     }
-    
+
     // Priority 2: Weather condition
     if (weather.condition) {
       return weather.condition;
     }
-    
+
     // Priority 3: Placeholder
     return '--';
   };

@@ -1,8 +1,8 @@
 /**
  * Integration tests for Hero layout with MapCard
- * 
+ *
  * **Validates: Requirements 1.1, 1.2, 1.4**
- * 
+ *
  * Tests cover:
  * - MapCard renders as a card component in the Dashboard alongside existing weather cards (Requirement 1.1)
  * - MapCard does not replace the main weather view for the selected location (Requirement 1.2)
@@ -42,8 +42,12 @@ vi.mock('./LocationMarker', () => ({
 // Mock mapUtils
 vi.mock('./mapUtils', () => ({
   validateCoordinates: (location: any) => {
-    return location.latitude >= -90 && location.latitude <= 90 &&
-           location.longitude >= -180 && location.longitude <= 180;
+    return (
+      location.latitude >= -90 &&
+      location.latitude <= 90 &&
+      location.longitude >= -180 &&
+      location.longitude <= 180
+    );
   },
   resolveCollisions: (positions: any[]) => positions,
 }));
@@ -94,32 +98,26 @@ function createMockLocation(id: number, latitude: number, longitude: number): Lo
       air_quality_region: 'central',
       forecast_periods: [
         {
-          time: '2024-01-01T13:00:00Z',
-          temperature_c: 29,
-          condition: 'Partly Cloudy',
-          precipitation_probability: 10,
+          label: '1 PM',
+          forecast: 'Partly Cloudy',
         },
         {
-          time: '2024-01-01T14:00:00Z',
-          temperature_c: 30,
-          condition: 'Partly Cloudy',
-          precipitation_probability: 15,
+          label: '2 PM',
+          forecast: 'Partly Cloudy',
         },
       ],
       daily_forecast: [
         {
           date: '2024-01-01',
-          high_c: 32,
-          low_c: 22,
-          condition: 'Sunny',
-          precipitation_probability: 10,
+          temperature_high_c: 32,
+          temperature_low_c: 22,
+          forecast: 'Sunny',
         },
         {
           date: '2024-01-02',
-          high_c: 31,
-          low_c: 23,
-          condition: 'Partly Cloudy',
-          precipitation_probability: 20,
+          temperature_high_c: 31,
+          temperature_low_c: 23,
+          forecast: 'Partly Cloudy',
         },
       ],
     },
@@ -144,7 +142,7 @@ describe('Hero - MapCard Layout Integration', () => {
       const { container } = render(
         <StoreProvider>
           <Hero />
-        </StoreProvider>
+        </StoreProvider>,
       );
 
       await waitFor(() => {
@@ -158,11 +156,11 @@ describe('Hero - MapCard Layout Integration', () => {
       // Verify header exists
       const header = main?.querySelector('header');
       expect(header).toBeInTheDocument();
-      
+
       // Verify MapCard exists
       const mapCard = main?.querySelector('[data-testid="map-container"]')?.closest('section');
       expect(mapCard).toBeInTheDocument();
-      
+
       // Both should be present in the DOM
       expect(header).toBeInTheDocument();
       expect(mapCard).toBeInTheDocument();
@@ -175,7 +173,7 @@ describe('Hero - MapCard Layout Integration', () => {
       render(
         <StoreProvider>
           <Hero />
-        </StoreProvider>
+        </StoreProvider>,
       );
 
       await waitFor(() => {
@@ -191,20 +189,20 @@ describe('Hero - MapCard Layout Integration', () => {
     it('renders MapCard in the dashboard when location is selected', async () => {
       const mockLocations = [
         createMockLocation(1, 1.3521, 103.8198),
-        createMockLocation(2, 40.7128, -74.0060),
+        createMockLocation(2, 40.7128, -74.006),
       ];
       mockListLocations.mockResolvedValue({ locations: mockLocations });
 
       render(
         <StoreProvider>
           <Hero />
-        </StoreProvider>
+        </StoreProvider>,
       );
 
       await waitFor(() => {
         // Verify MapCard is present in the dashboard
         expect(screen.getByTestId('map-container')).toBeInTheDocument();
-        
+
         // Verify main weather view is also present (using heading as unique identifier)
         const heading = screen.getByRole('heading', { level: 1 });
         expect(heading).toHaveTextContent('Test Area');
@@ -214,7 +212,7 @@ describe('Hero - MapCard Layout Integration', () => {
     it('renders MapCard with multiple locations', async () => {
       const mockLocations = [
         createMockLocation(1, 1.3521, 103.8198),
-        createMockLocation(2, 40.7128, -74.0060),
+        createMockLocation(2, 40.7128, -74.006),
         createMockLocation(3, -33.8688, 151.2093),
       ];
       mockListLocations.mockResolvedValue({ locations: mockLocations });
@@ -222,12 +220,12 @@ describe('Hero - MapCard Layout Integration', () => {
       render(
         <StoreProvider>
           <Hero />
-        </StoreProvider>
+        </StoreProvider>,
       );
 
       await waitFor(() => {
         expect(screen.getByTestId('map-container')).toBeInTheDocument();
-        
+
         // Verify all location markers are rendered
         const markers = screen.getAllByTestId('location-marker');
         expect(markers).toHaveLength(3);
@@ -243,18 +241,18 @@ describe('Hero - MapCard Layout Integration', () => {
       render(
         <StoreProvider>
           <Hero />
-        </StoreProvider>
+        </StoreProvider>,
       );
 
       await waitFor(() => {
         // Verify MapCard is present
         expect(screen.getByTestId('map-container')).toBeInTheDocument();
-        
+
         // Verify main weather view header is present
         const header = screen.getByRole('heading', { level: 1 });
         expect(header).toBeInTheDocument();
         expect(header).toHaveTextContent('Test Area');
-        
+
         // Verify "Updated" text is present (unique to main view header)
         expect(screen.getByText(/Updated/)).toBeInTheDocument();
       });
@@ -267,7 +265,7 @@ describe('Hero - MapCard Layout Integration', () => {
       render(
         <StoreProvider>
           <Hero />
-        </StoreProvider>
+        </StoreProvider>,
       );
 
       await waitFor(() => {
@@ -276,7 +274,7 @@ describe('Hero - MapCard Layout Integration', () => {
         expect(heading).toHaveTextContent('Test Area');
         // Check for "Updated" text which is unique to the header
         expect(screen.getByText(/Updated/)).toBeInTheDocument();
-        
+
         // Verify MapCard is also present
         expect(screen.getByTestId('map-container')).toBeInTheDocument();
       });
@@ -289,7 +287,7 @@ describe('Hero - MapCard Layout Integration', () => {
       const { container } = render(
         <StoreProvider>
           <Hero />
-        </StoreProvider>
+        </StoreProvider>,
       );
 
       await waitFor(() => {
@@ -299,9 +297,9 @@ describe('Hero - MapCard Layout Integration', () => {
       // Verify HourlyStrip is rendered (it should be present after MapCard)
       const main = container.querySelector('main');
       const mapCard = main?.querySelector('[data-testid="map-container"]')?.closest('section');
-      
+
       expect(mapCard).toBeInTheDocument();
-      
+
       // The HourlyStrip should be rendered after the MapCard
       // We can verify this by checking that both exist in the DOM
       expect(mapCard).toBeInTheDocument();
@@ -314,17 +312,17 @@ describe('Hero - MapCard Layout Integration', () => {
       render(
         <StoreProvider>
           <Hero />
-        </StoreProvider>
+        </StoreProvider>,
       );
 
       await waitFor(() => {
         // Verify MapCard is present
         expect(screen.getByTestId('map-container')).toBeInTheDocument();
-        
+
         // Verify footer with refresh button is present
         const refreshButton = screen.getByRole('button', { name: /refresh/i });
         expect(refreshButton).toBeInTheDocument();
-        
+
         // Verify footer text is present (using getAllByText since it appears in multiple places)
         const footerTexts = screen.getAllByText(/Weather for Test Area/);
         expect(footerTexts.length).toBeGreaterThan(0);
@@ -334,14 +332,14 @@ describe('Hero - MapCard Layout Integration', () => {
     it('maintains main weather view when switching between locations', async () => {
       const mockLocations = [
         createMockLocation(1, 1.3521, 103.8198),
-        createMockLocation(2, 40.7128, -74.0060),
+        createMockLocation(2, 40.7128, -74.006),
       ];
       mockListLocations.mockResolvedValue({ locations: mockLocations });
 
       render(
         <StoreProvider>
           <Hero />
-        </StoreProvider>
+        </StoreProvider>,
       );
 
       await waitFor(() => {
@@ -364,13 +362,13 @@ describe('Hero - MapCard Layout Integration', () => {
       render(
         <StoreProvider>
           <Hero />
-        </StoreProvider>
+        </StoreProvider>,
       );
 
       await waitFor(() => {
         const mapCard = screen.getByTestId('map-container').closest('section');
         expect(mapCard).toBeInTheDocument();
-        
+
         // Verify border radius class (rounded-2xl)
         expect(mapCard).toHaveClass('rounded-2xl');
       });
@@ -383,13 +381,13 @@ describe('Hero - MapCard Layout Integration', () => {
       render(
         <StoreProvider>
           <Hero />
-        </StoreProvider>
+        </StoreProvider>,
       );
 
       await waitFor(() => {
         const mapCard = screen.getByTestId('map-container').closest('section');
         expect(mapCard).toBeInTheDocument();
-        
+
         // Verify border class (border border-white/15)
         expect(mapCard).toHaveClass('border');
         expect(mapCard).toHaveClass('border-white/15');
@@ -403,13 +401,13 @@ describe('Hero - MapCard Layout Integration', () => {
       render(
         <StoreProvider>
           <Hero />
-        </StoreProvider>
+        </StoreProvider>,
       );
 
       await waitFor(() => {
         const mapCard = screen.getByTestId('map-container').closest('section');
         expect(mapCard).toBeInTheDocument();
-        
+
         // Verify background color class (bg-white/[0.08])
         expect(mapCard).toHaveClass('bg-white/[0.08]');
       });
@@ -422,13 +420,13 @@ describe('Hero - MapCard Layout Integration', () => {
       render(
         <StoreProvider>
           <Hero />
-        </StoreProvider>
+        </StoreProvider>,
       );
 
       await waitFor(() => {
         const mapCard = screen.getByTestId('map-container').closest('section');
         expect(mapCard).toBeInTheDocument();
-        
+
         // Verify backdrop blur class (backdrop-blur-xl)
         expect(mapCard).toHaveClass('backdrop-blur-xl');
       });
@@ -441,13 +439,13 @@ describe('Hero - MapCard Layout Integration', () => {
       render(
         <StoreProvider>
           <Hero />
-        </StoreProvider>
+        </StoreProvider>,
       );
 
       await waitFor(() => {
         const mapCard = screen.getByTestId('map-container').closest('section');
         expect(mapCard).toBeInTheDocument();
-        
+
         // Verify overflow hidden class
         expect(mapCard).toHaveClass('overflow-hidden');
       });
@@ -460,13 +458,13 @@ describe('Hero - MapCard Layout Integration', () => {
       render(
         <StoreProvider>
           <Hero />
-        </StoreProvider>
+        </StoreProvider>,
       );
 
       await waitFor(() => {
         const mapCard = screen.getByTestId('map-container').closest('section');
         expect(mapCard).toBeInTheDocument();
-        
+
         // Verify minimum height class (min-h-[300px])
         expect(mapCard).toHaveClass('min-h-[300px]');
       });
@@ -479,13 +477,13 @@ describe('Hero - MapCard Layout Integration', () => {
       render(
         <StoreProvider>
           <Hero />
-        </StoreProvider>
+        </StoreProvider>,
       );
 
       await waitFor(() => {
         const mapCard = screen.getByTestId('map-container').closest('section');
         expect(mapCard).toBeInTheDocument();
-        
+
         // Verify minimum height class for medium screens (md:min-h-[400px])
         expect(mapCard).toHaveClass('md:min-h-[400px]');
       });
@@ -498,13 +496,13 @@ describe('Hero - MapCard Layout Integration', () => {
       render(
         <StoreProvider>
           <Hero />
-        </StoreProvider>
+        </StoreProvider>,
       );
 
       await waitFor(() => {
         const mapCard = screen.getByTestId('map-container').closest('section');
         expect(mapCard).toBeInTheDocument();
-        
+
         // Verify full width class (w-full)
         expect(mapCard).toHaveClass('w-full');
       });
@@ -517,13 +515,13 @@ describe('Hero - MapCard Layout Integration', () => {
       render(
         <StoreProvider>
           <Hero />
-        </StoreProvider>
+        </StoreProvider>,
       );
 
       await waitFor(() => {
         const mapCard = screen.getByTestId('map-container').closest('section');
         expect(mapCard).toBeInTheDocument();
-        
+
         // Verify transition classes
         expect(mapCard).toHaveClass('transition-all');
         expect(mapCard).toHaveClass('duration-500');
@@ -537,13 +535,13 @@ describe('Hero - MapCard Layout Integration', () => {
       render(
         <StoreProvider>
           <Hero />
-        </StoreProvider>
+        </StoreProvider>,
       );
 
       await waitFor(() => {
         const mapCard = screen.getByTestId('map-container').closest('section');
         expect(mapCard).toBeInTheDocument();
-        
+
         // Verify all styling classes are applied together
         const expectedClasses = [
           'rounded-2xl',
@@ -558,8 +556,8 @@ describe('Hero - MapCard Layout Integration', () => {
           'transition-all',
           'duration-500',
         ];
-        
-        expectedClasses.forEach(className => {
+
+        expectedClasses.forEach((className) => {
           expect(mapCard).toHaveClass(className);
         });
       });
@@ -573,13 +571,13 @@ describe('Hero - MapCard Layout Integration', () => {
       render(
         <StoreProvider>
           <Hero />
-        </StoreProvider>
+        </StoreProvider>,
       );
 
       await waitFor(() => {
         // Should show "Select a location" message
         expect(screen.getByText('Select a location')).toBeInTheDocument();
-        
+
         // MapCard should not be rendered
         expect(screen.queryByTestId('map-container')).not.toBeInTheDocument();
       });
@@ -593,7 +591,7 @@ describe('Hero - MapCard Layout Integration', () => {
       render(
         <StoreProvider>
           <Hero />
-        </StoreProvider>
+        </StoreProvider>,
       );
 
       await waitFor(() => {

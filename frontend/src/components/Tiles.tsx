@@ -253,13 +253,9 @@ export function ConditionTile({ weather }: WeatherProps) {
     <TileShell icon={<CloudIcon className="h-3.5 w-3.5" />} title="Condition">
       <div className="text-2xl font-light leading-tight text-white/95">{condition}</div>
       {area && <div className="mt-2 text-sm text-white/75">{area}</div>}
-      {validPeriod && (
-        <p className="mt-3 text-xs leading-snug text-white/70">{validPeriod}</p>
-      )}
+      {validPeriod && <p className="mt-3 text-xs leading-snug text-white/70">{validPeriod}</p>}
       {!validPeriod && (
-        <p className="mt-3 text-xs leading-snug text-white/70">
-          2-hour forecast from data.gov.sg
-        </p>
+        <p className="mt-3 text-xs leading-snug text-white/70">2-hour forecast from data.gov.sg</p>
       )}
     </TileShell>
   );

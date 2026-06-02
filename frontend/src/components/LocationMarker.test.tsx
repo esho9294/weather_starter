@@ -1,8 +1,8 @@
 /**
  * Unit tests for LocationMarker component
- * 
+ *
  * **Validates: Requirements 2.1, 2.2, 2.5, 2.6**
- * 
+ *
  * Tests cover:
  * - Marker renders at correct coordinates (Requirement 2.1)
  * - onMarkerClick called with location ID on click (Requirement 2.5)
@@ -25,7 +25,7 @@ vi.mock('react-leaflet', async () => {
     Marker: vi.fn(({ position, icon, eventHandlers, children }: any) => {
       // Extract the HTML from the divIcon to test styling
       const iconHtml = icon?.options?.html || '';
-      
+
       return (
         <div
           className="leaflet-marker-icon"
@@ -80,82 +80,66 @@ describe('LocationMarker', () => {
   describe('marker renders at correct coordinates', () => {
     it('renders marker at specified latitude and longitude', () => {
       const location = createMockLocation(1, 1.3521, 103.8198);
-      
+
       const { container } = render(
         <MapContainer center={[0, 0]} zoom={10}>
-          <LocationMarker
-            location={location}
-            isSelected={false}
-            onMarkerClick={onMarkerClick}
-          />
-        </MapContainer>
+          <LocationMarker location={location} isSelected={false} onMarkerClick={onMarkerClick} />
+        </MapContainer>,
       );
 
       // Verify the marker is rendered in the DOM
       const markerElement = container.querySelector('.leaflet-marker-icon');
       expect(markerElement).toBeInTheDocument();
-      
+
       // Verify the position is correct
       const position = markerElement?.getAttribute('data-position');
       expect(position).toBe('[1.3521,103.8198]');
     });
 
     it('renders marker at positive coordinates (New York)', () => {
-      const location = createMockLocation(1, 40.7128, -74.0060);
-      
+      const location = createMockLocation(1, 40.7128, -74.006);
+
       const { container } = render(
         <MapContainer center={[0, 0]} zoom={10}>
-          <LocationMarker
-            location={location}
-            isSelected={false}
-            onMarkerClick={onMarkerClick}
-          />
-        </MapContainer>
+          <LocationMarker location={location} isSelected={false} onMarkerClick={onMarkerClick} />
+        </MapContainer>,
       );
 
       const markerElement = container.querySelector('.leaflet-marker-icon');
       expect(markerElement).toBeInTheDocument();
-      
+
       const position = markerElement?.getAttribute('data-position');
       expect(position).toBe('[40.7128,-74.006]');
     });
 
     it('renders marker at negative coordinates (Sydney)', () => {
       const location = createMockLocation(1, -33.8688, 151.2093);
-      
+
       const { container } = render(
         <MapContainer center={[0, 0]} zoom={10}>
-          <LocationMarker
-            location={location}
-            isSelected={false}
-            onMarkerClick={onMarkerClick}
-          />
-        </MapContainer>
+          <LocationMarker location={location} isSelected={false} onMarkerClick={onMarkerClick} />
+        </MapContainer>,
       );
 
       const markerElement = container.querySelector('.leaflet-marker-icon');
       expect(markerElement).toBeInTheDocument();
-      
+
       const position = markerElement?.getAttribute('data-position');
       expect(position).toBe('[-33.8688,151.2093]');
     });
 
     it('renders marker at boundary coordinates', () => {
       const location = createMockLocation(1, 90, 180);
-      
+
       const { container } = render(
         <MapContainer center={[0, 0]} zoom={10}>
-          <LocationMarker
-            location={location}
-            isSelected={false}
-            onMarkerClick={onMarkerClick}
-          />
-        </MapContainer>
+          <LocationMarker location={location} isSelected={false} onMarkerClick={onMarkerClick} />
+        </MapContainer>,
       );
 
       const markerElement = container.querySelector('.leaflet-marker-icon');
       expect(markerElement).toBeInTheDocument();
-      
+
       const position = markerElement?.getAttribute('data-position');
       expect(position).toBe('[90,180]');
     });
@@ -164,59 +148,47 @@ describe('LocationMarker', () => {
   describe('onMarkerClick called with location ID on click', () => {
     it('calls onMarkerClick with correct location ID when marker is clicked', () => {
       const location = createMockLocation(42, 1.3521, 103.8198);
-      
+
       const { container } = render(
         <MapContainer center={[0, 0]} zoom={10}>
-          <LocationMarker
-            location={location}
-            isSelected={false}
-            onMarkerClick={onMarkerClick}
-          />
-        </MapContainer>
+          <LocationMarker location={location} isSelected={false} onMarkerClick={onMarkerClick} />
+        </MapContainer>,
       );
 
       const markerElement = container.querySelector('.leaflet-marker-icon');
       expect(markerElement).toBeInTheDocument();
-      
+
       // Simulate click event
       markerElement?.click();
-      
+
       expect(onMarkerClick).toHaveBeenCalledWith(42);
       expect(onMarkerClick).toHaveBeenCalledTimes(1);
     });
 
     it('calls onMarkerClick with different IDs for different locations', () => {
       const location1 = createMockLocation(1, 1.3521, 103.8198);
-      const location2 = createMockLocation(2, 40.7128, -74.0060);
-      
+      const location2 = createMockLocation(2, 40.7128, -74.006);
+
       const { container: container1 } = render(
         <MapContainer center={[0, 0]} zoom={10}>
-          <LocationMarker
-            location={location1}
-            isSelected={false}
-            onMarkerClick={onMarkerClick}
-          />
-        </MapContainer>
+          <LocationMarker location={location1} isSelected={false} onMarkerClick={onMarkerClick} />
+        </MapContainer>,
       );
 
       const markerElement1 = container1.querySelector('.leaflet-marker-icon');
       markerElement1?.click();
-      
+
       expect(onMarkerClick).toHaveBeenCalledWith(1);
 
       const { container: container2 } = render(
         <MapContainer center={[0, 0]} zoom={10}>
-          <LocationMarker
-            location={location2}
-            isSelected={false}
-            onMarkerClick={onMarkerClick}
-          />
-        </MapContainer>
+          <LocationMarker location={location2} isSelected={false} onMarkerClick={onMarkerClick} />
+        </MapContainer>,
       );
 
       const markerElement2 = container2.querySelector('.leaflet-marker-icon');
       markerElement2?.click();
-      
+
       expect(onMarkerClick).toHaveBeenCalledWith(2);
       expect(onMarkerClick).toHaveBeenCalledTimes(2);
     });
@@ -225,20 +197,16 @@ describe('LocationMarker', () => {
   describe('selected styling applied when isSelected is true', () => {
     it('applies scale(1.2) transform when isSelected is true', () => {
       const location = createMockLocation(1, 1.3521, 103.8198);
-      
+
       const { container } = render(
         <MapContainer center={[0, 0]} zoom={10}>
-          <LocationMarker
-            location={location}
-            isSelected={true}
-            onMarkerClick={onMarkerClick}
-          />
-        </MapContainer>
+          <LocationMarker location={location} isSelected={true} onMarkerClick={onMarkerClick} />
+        </MapContainer>,
       );
 
       const markerElement = container.querySelector('.leaflet-marker-icon');
       expect(markerElement).toBeInTheDocument();
-      
+
       // Check that the HTML contains the scale(1.2) transform
       const iconHtml = markerElement?.getAttribute('data-icon-html') || '';
       expect(iconHtml).toContain('scale(1.2)');
@@ -246,20 +214,16 @@ describe('LocationMarker', () => {
 
     it('applies scale(1) transform when isSelected is false', () => {
       const location = createMockLocation(1, 1.3521, 103.8198);
-      
+
       const { container } = render(
         <MapContainer center={[0, 0]} zoom={10}>
-          <LocationMarker
-            location={location}
-            isSelected={false}
-            onMarkerClick={onMarkerClick}
-          />
-        </MapContainer>
+          <LocationMarker location={location} isSelected={false} onMarkerClick={onMarkerClick} />
+        </MapContainer>,
       );
 
       const markerElement = container.querySelector('.leaflet-marker-icon');
       expect(markerElement).toBeInTheDocument();
-      
+
       // Check that the HTML contains the scale(1) transform
       const iconHtml = markerElement?.getAttribute('data-icon-html') || '';
       expect(iconHtml).toContain('scale(1)');
@@ -267,20 +231,16 @@ describe('LocationMarker', () => {
 
     it('applies border color #3b82f6 when isSelected is true', () => {
       const location = createMockLocation(1, 1.3521, 103.8198);
-      
+
       const { container } = render(
         <MapContainer center={[0, 0]} zoom={10}>
-          <LocationMarker
-            location={location}
-            isSelected={true}
-            onMarkerClick={onMarkerClick}
-          />
-        </MapContainer>
+          <LocationMarker location={location} isSelected={true} onMarkerClick={onMarkerClick} />
+        </MapContainer>,
       );
 
       const markerElement = container.querySelector('.leaflet-marker-icon');
       expect(markerElement).toBeInTheDocument();
-      
+
       // Check that the HTML contains the selected border color
       const iconHtml = markerElement?.getAttribute('data-icon-html') || '';
       expect(iconHtml).toContain('stroke="#3b82f6"');
@@ -288,20 +248,16 @@ describe('LocationMarker', () => {
 
     it('applies border color #ffffff when isSelected is false', () => {
       const location = createMockLocation(1, 1.3521, 103.8198);
-      
+
       const { container } = render(
         <MapContainer center={[0, 0]} zoom={10}>
-          <LocationMarker
-            location={location}
-            isSelected={false}
-            onMarkerClick={onMarkerClick}
-          />
-        </MapContainer>
+          <LocationMarker location={location} isSelected={false} onMarkerClick={onMarkerClick} />
+        </MapContainer>,
       );
 
       const markerElement = container.querySelector('.leaflet-marker-icon');
       expect(markerElement).toBeInTheDocument();
-      
+
       // Check that the HTML contains the default border color
       const iconHtml = markerElement?.getAttribute('data-icon-html') || '';
       expect(iconHtml).toContain('stroke="#ffffff"');
@@ -309,20 +265,16 @@ describe('LocationMarker', () => {
 
     it('applies thicker border (3px) when isSelected is true', () => {
       const location = createMockLocation(1, 1.3521, 103.8198);
-      
+
       const { container } = render(
         <MapContainer center={[0, 0]} zoom={10}>
-          <LocationMarker
-            location={location}
-            isSelected={true}
-            onMarkerClick={onMarkerClick}
-          />
-        </MapContainer>
+          <LocationMarker location={location} isSelected={true} onMarkerClick={onMarkerClick} />
+        </MapContainer>,
       );
 
       const markerElement = container.querySelector('.leaflet-marker-icon');
       expect(markerElement).toBeInTheDocument();
-      
+
       // Check that the HTML contains the thicker border width
       const iconHtml = markerElement?.getAttribute('data-icon-html') || '';
       expect(iconHtml).toContain('stroke-width="3"');
@@ -330,20 +282,16 @@ describe('LocationMarker', () => {
 
     it('applies normal border (2px) when isSelected is false', () => {
       const location = createMockLocation(1, 1.3521, 103.8198);
-      
+
       const { container } = render(
         <MapContainer center={[0, 0]} zoom={10}>
-          <LocationMarker
-            location={location}
-            isSelected={false}
-            onMarkerClick={onMarkerClick}
-          />
-        </MapContainer>
+          <LocationMarker location={location} isSelected={false} onMarkerClick={onMarkerClick} />
+        </MapContainer>,
       );
 
       const markerElement = container.querySelector('.leaflet-marker-icon');
       expect(markerElement).toBeInTheDocument();
-      
+
       // Check that the HTML contains the normal border width
       const iconHtml = markerElement?.getAttribute('data-icon-html') || '';
       expect(iconHtml).toContain('stroke-width="2"');
@@ -351,20 +299,16 @@ describe('LocationMarker', () => {
 
     it('applies 200ms transition duration', () => {
       const location = createMockLocation(1, 1.3521, 103.8198);
-      
+
       const { container } = render(
         <MapContainer center={[0, 0]} zoom={10}>
-          <LocationMarker
-            location={location}
-            isSelected={false}
-            onMarkerClick={onMarkerClick}
-          />
-        </MapContainer>
+          <LocationMarker location={location} isSelected={false} onMarkerClick={onMarkerClick} />
+        </MapContainer>,
       );
 
       const markerElement = container.querySelector('.leaflet-marker-icon');
       expect(markerElement).toBeInTheDocument();
-      
+
       // Check that the HTML contains the transition duration
       const iconHtml = markerElement?.getAttribute('data-icon-html') || '';
       expect(iconHtml).toContain('200ms');
@@ -372,20 +316,16 @@ describe('LocationMarker', () => {
 
     it('applies ease-in-out transition timing', () => {
       const location = createMockLocation(1, 1.3521, 103.8198);
-      
+
       const { container } = render(
         <MapContainer center={[0, 0]} zoom={10}>
-          <LocationMarker
-            location={location}
-            isSelected={false}
-            onMarkerClick={onMarkerClick}
-          />
-        </MapContainer>
+          <LocationMarker location={location} isSelected={false} onMarkerClick={onMarkerClick} />
+        </MapContainer>,
       );
 
       const markerElement = container.querySelector('.leaflet-marker-icon');
       expect(markerElement).toBeInTheDocument();
-      
+
       // Check that the HTML contains the transition timing function
       const iconHtml = markerElement?.getAttribute('data-icon-html') || '';
       expect(iconHtml).toContain('ease-in-out');
@@ -395,17 +335,13 @@ describe('LocationMarker', () => {
   describe('marker not rendered for invalid coordinates', () => {
     it('does not render marker for latitude > 90', () => {
       const location = createMockLocation(1, 91, 103.8198);
-      
+
       // The component should still render but Leaflet may not display it correctly
       // We test that the component handles the invalid coordinate gracefully
       const { container } = render(
         <MapContainer center={[0, 0]} zoom={10}>
-          <LocationMarker
-            location={location}
-            isSelected={false}
-            onMarkerClick={onMarkerClick}
-          />
-        </MapContainer>
+          <LocationMarker location={location} isSelected={false} onMarkerClick={onMarkerClick} />
+        </MapContainer>,
       );
 
       // The marker element may still be created, but it represents invalid data
@@ -417,15 +353,11 @@ describe('LocationMarker', () => {
 
     it('does not render marker for latitude < -90', () => {
       const location = createMockLocation(1, -91, 103.8198);
-      
+
       const { container } = render(
         <MapContainer center={[0, 0]} zoom={10}>
-          <LocationMarker
-            location={location}
-            isSelected={false}
-            onMarkerClick={onMarkerClick}
-          />
-        </MapContainer>
+          <LocationMarker location={location} isSelected={false} onMarkerClick={onMarkerClick} />
+        </MapContainer>,
       );
 
       const markerElement = container.querySelector('.leaflet-marker-icon');
@@ -434,15 +366,11 @@ describe('LocationMarker', () => {
 
     it('does not render marker for longitude > 180', () => {
       const location = createMockLocation(1, 1.3521, 181);
-      
+
       const { container } = render(
         <MapContainer center={[0, 0]} zoom={10}>
-          <LocationMarker
-            location={location}
-            isSelected={false}
-            onMarkerClick={onMarkerClick}
-          />
-        </MapContainer>
+          <LocationMarker location={location} isSelected={false} onMarkerClick={onMarkerClick} />
+        </MapContainer>,
       );
 
       const markerElement = container.querySelector('.leaflet-marker-icon');
@@ -451,15 +379,11 @@ describe('LocationMarker', () => {
 
     it('does not render marker for longitude < -180', () => {
       const location = createMockLocation(1, 1.3521, -181);
-      
+
       const { container } = render(
         <MapContainer center={[0, 0]} zoom={10}>
-          <LocationMarker
-            location={location}
-            isSelected={false}
-            onMarkerClick={onMarkerClick}
-          />
-        </MapContainer>
+          <LocationMarker location={location} isSelected={false} onMarkerClick={onMarkerClick} />
+        </MapContainer>,
       );
 
       const markerElement = container.querySelector('.leaflet-marker-icon');
@@ -471,20 +395,16 @@ describe('LocationMarker', () => {
     it('displays temperature when available', () => {
       const location = createMockLocation(1, 1.3521, 103.8198);
       location.weather.temperature_c = 28;
-      
+
       const { container } = render(
         <MapContainer center={[0, 0]} zoom={10}>
-          <LocationMarker
-            location={location}
-            isSelected={false}
-            onMarkerClick={onMarkerClick}
-          />
-        </MapContainer>
+          <LocationMarker location={location} isSelected={false} onMarkerClick={onMarkerClick} />
+        </MapContainer>,
       );
 
       const markerElement = container.querySelector('.leaflet-marker-icon');
       const iconHtml = markerElement?.getAttribute('data-icon-html') || '';
-      
+
       // Check that the temperature is displayed in the label
       expect(iconHtml).toContain('28°C');
     });
@@ -493,20 +413,16 @@ describe('LocationMarker', () => {
       const location = createMockLocation(1, 1.3521, 103.8198);
       location.weather.temperature_c = null;
       location.weather.condition = 'Partly Cloudy';
-      
+
       const { container } = render(
         <MapContainer center={[0, 0]} zoom={10}>
-          <LocationMarker
-            location={location}
-            isSelected={false}
-            onMarkerClick={onMarkerClick}
-          />
-        </MapContainer>
+          <LocationMarker location={location} isSelected={false} onMarkerClick={onMarkerClick} />
+        </MapContainer>,
       );
 
       const markerElement = container.querySelector('.leaflet-marker-icon');
       const iconHtml = markerElement?.getAttribute('data-icon-html') || '';
-      
+
       // Check that the condition is displayed in the label
       expect(iconHtml).toContain('Partly Cloudy');
     });
@@ -515,47 +431,39 @@ describe('LocationMarker', () => {
       const location = createMockLocation(1, 1.3521, 103.8198);
       location.weather.temperature_c = null;
       location.weather.condition = null;
-      
+
       const { container } = render(
         <MapContainer center={[0, 0]} zoom={10}>
-          <LocationMarker
-            location={location}
-            isSelected={false}
-            onMarkerClick={onMarkerClick}
-          />
-        </MapContainer>
+          <LocationMarker location={location} isSelected={false} onMarkerClick={onMarkerClick} />
+        </MapContainer>,
       );
 
       const markerElement = container.querySelector('.leaflet-marker-icon');
       const iconHtml = markerElement?.getAttribute('data-icon-html') || '';
-      
+
       // Check that the placeholder is displayed in the label
       expect(iconHtml).toContain('--');
     });
 
     it('positions label above marker by default', () => {
       const location = createMockLocation(1, 1.3521, 103.8198);
-      
+
       const { container } = render(
         <MapContainer center={[0, 0]} zoom={10}>
-          <LocationMarker
-            location={location}
-            isSelected={false}
-            onMarkerClick={onMarkerClick}
-          />
-        </MapContainer>
+          <LocationMarker location={location} isSelected={false} onMarkerClick={onMarkerClick} />
+        </MapContainer>,
       );
 
       const markerElement = container.querySelector('.leaflet-marker-icon');
       const iconHtml = markerElement?.getAttribute('data-icon-html') || '';
-      
+
       // Check that the label is positioned above (bottom: 61px)
       expect(iconHtml).toContain('bottom: 61px');
     });
 
     it('positions label below marker when labelPosition is below', () => {
       const location = createMockLocation(1, 1.3521, 103.8198);
-      
+
       const { container } = render(
         <MapContainer center={[0, 0]} zoom={10}>
           <LocationMarker
@@ -564,52 +472,44 @@ describe('LocationMarker', () => {
             onMarkerClick={onMarkerClick}
             labelPosition="below"
           />
-        </MapContainer>
+        </MapContainer>,
       );
 
       const markerElement = container.querySelector('.leaflet-marker-icon');
       const iconHtml = markerElement?.getAttribute('data-icon-html') || '';
-      
+
       // Check that the label is positioned below (top: 41px)
       expect(iconHtml).toContain('top: 41px');
     });
 
     it('applies 200ms transition to label', () => {
       const location = createMockLocation(1, 1.3521, 103.8198);
-      
+
       const { container } = render(
         <MapContainer center={[0, 0]} zoom={10}>
-          <LocationMarker
-            location={location}
-            isSelected={false}
-            onMarkerClick={onMarkerClick}
-          />
-        </MapContainer>
+          <LocationMarker location={location} isSelected={false} onMarkerClick={onMarkerClick} />
+        </MapContainer>,
       );
 
       const markerElement = container.querySelector('.leaflet-marker-icon');
       const iconHtml = markerElement?.getAttribute('data-icon-html') || '';
-      
+
       // Check that the label has a 200ms transition
       expect(iconHtml).toContain('transition: all 200ms ease-in-out');
     });
 
     it('applies correct styling to label', () => {
       const location = createMockLocation(1, 1.3521, 103.8198);
-      
+
       const { container } = render(
         <MapContainer center={[0, 0]} zoom={10}>
-          <LocationMarker
-            location={location}
-            isSelected={false}
-            onMarkerClick={onMarkerClick}
-          />
-        </MapContainer>
+          <LocationMarker location={location} isSelected={false} onMarkerClick={onMarkerClick} />
+        </MapContainer>,
       );
 
       const markerElement = container.querySelector('.leaflet-marker-icon');
       const iconHtml = markerElement?.getAttribute('data-icon-html') || '';
-      
+
       // Check label styling
       expect(iconHtml).toContain('background-color: rgba(0, 0, 0, 0.8)');
       expect(iconHtml).toContain('color: white');

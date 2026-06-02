@@ -1,8 +1,8 @@
 /**
  * Integration tests for MapCard fullscreen transitions
- * 
+ *
  * **Validates: Requirements 4.2, 4.3, 4.4, 4.5, 4.6, 4.7, 4.8, 4.9, 4.10**
- * 
+ *
  * Tests cover:
  * - Expand button opens fullscreen within 500ms (Requirement 4.2)
  * - Close button exits fullscreen within 500ms (Requirement 4.5)
@@ -47,11 +47,7 @@ vi.mock('react-leaflet', () => ({
     }
 
     return (
-      <div
-        data-testid="map-container"
-        data-center={JSON.stringify(center)}
-        data-zoom={zoom}
-      >
+      <div data-testid="map-container" data-center={JSON.stringify(center)} data-zoom={zoom}>
         {children}
       </div>
     );
@@ -107,11 +103,7 @@ vi.mock('../api', () => ({
 }));
 
 // Helper function to create a mock location
-function createMockLocation(
-  id: number,
-  latitude: number,
-  longitude: number
-): Location {
+function createMockLocation(id: number, latitude: number, longitude: number): Location {
   return {
     id,
     latitude,
@@ -158,7 +150,7 @@ describe('MapCard - Fullscreen Transitions Integration', () => {
       render(
         <StoreProvider>
           <MapCard />
-        </StoreProvider>
+        </StoreProvider>,
       );
 
       // Wait for initial render
@@ -176,7 +168,7 @@ describe('MapCard - Fullscreen Transitions Integration', () => {
           expect(screen.getByLabelText('Exit fullscreen')).toBeInTheDocument();
           expect(screen.queryByLabelText('Expand map')).not.toBeInTheDocument();
         },
-        { timeout: 500 }
+        { timeout: 500 },
       );
 
       const endTime = Date.now();
@@ -192,7 +184,7 @@ describe('MapCard - Fullscreen Transitions Integration', () => {
       render(
         <StoreProvider>
           <MapCard />
-        </StoreProvider>
+        </StoreProvider>,
       );
 
       await waitFor(() => {
@@ -215,7 +207,7 @@ describe('MapCard - Fullscreen Transitions Integration', () => {
       render(
         <StoreProvider>
           <MapCard />
-        </StoreProvider>
+        </StoreProvider>,
       );
 
       await waitFor(() => {
@@ -240,7 +232,7 @@ describe('MapCard - Fullscreen Transitions Integration', () => {
       render(
         <StoreProvider>
           <MapCard />
-        </StoreProvider>
+        </StoreProvider>,
       );
 
       // Enter fullscreen
@@ -268,7 +260,7 @@ describe('MapCard - Fullscreen Transitions Integration', () => {
           expect(screen.getByLabelText('Expand map')).toBeInTheDocument();
           expect(screen.queryByLabelText('Exit fullscreen')).not.toBeInTheDocument();
         },
-        { timeout: 1000 }
+        { timeout: 1000 },
       );
 
       const endTime = Date.now();
@@ -284,7 +276,7 @@ describe('MapCard - Fullscreen Transitions Integration', () => {
       render(
         <StoreProvider>
           <MapCard />
-        </StoreProvider>
+        </StoreProvider>,
       );
 
       // Enter fullscreen
@@ -307,10 +299,13 @@ describe('MapCard - Fullscreen Transitions Integration', () => {
       const closeButton = screen.getByLabelText('Exit fullscreen');
       fireEvent.click(closeButton);
 
-      await waitFor(() => {
-        const fullscreenDiv = document.body.querySelector('.fixed.inset-0.z-50.bg-black');
-        expect(fullscreenDiv).toBeNull();
-      }, { timeout: 1000 });
+      await waitFor(
+        () => {
+          const fullscreenDiv = document.body.querySelector('.fixed.inset-0.z-50.bg-black');
+          expect(fullscreenDiv).toBeNull();
+        },
+        { timeout: 1000 },
+      );
     });
 
     it('displays expand button after exiting fullscreen', async () => {
@@ -319,7 +314,7 @@ describe('MapCard - Fullscreen Transitions Integration', () => {
       render(
         <StoreProvider>
           <MapCard />
-        </StoreProvider>
+        </StoreProvider>,
       );
 
       // Enter fullscreen
@@ -341,9 +336,12 @@ describe('MapCard - Fullscreen Transitions Integration', () => {
       const closeButton = screen.getByLabelText('Exit fullscreen');
       fireEvent.click(closeButton);
 
-      await waitFor(() => {
-        expect(screen.getByLabelText('Expand map')).toBeInTheDocument();
-      }, { timeout: 1000 });
+      await waitFor(
+        () => {
+          expect(screen.getByLabelText('Expand map')).toBeInTheDocument();
+        },
+        { timeout: 1000 },
+      );
     });
   });
 
@@ -354,7 +352,7 @@ describe('MapCard - Fullscreen Transitions Integration', () => {
       render(
         <StoreProvider>
           <MapCard />
-        </StoreProvider>
+        </StoreProvider>,
       );
 
       // Enter fullscreen
@@ -381,7 +379,7 @@ describe('MapCard - Fullscreen Transitions Integration', () => {
           expect(screen.getByLabelText('Expand map')).toBeInTheDocument();
           expect(screen.queryByLabelText('Exit fullscreen')).not.toBeInTheDocument();
         },
-        { timeout: 1000 }
+        { timeout: 1000 },
       );
 
       const endTime = Date.now();
@@ -397,7 +395,7 @@ describe('MapCard - Fullscreen Transitions Integration', () => {
       render(
         <StoreProvider>
           <MapCard />
-        </StoreProvider>
+        </StoreProvider>,
       );
 
       // Enter fullscreen
@@ -428,7 +426,7 @@ describe('MapCard - Fullscreen Transitions Integration', () => {
       render(
         <StoreProvider>
           <MapCard />
-        </StoreProvider>
+        </StoreProvider>,
       );
 
       await waitFor(() => {
@@ -450,7 +448,7 @@ describe('MapCard - Fullscreen Transitions Integration', () => {
       render(
         <StoreProvider>
           <MapCard />
-        </StoreProvider>
+        </StoreProvider>,
       );
 
       await waitFor(() => {
@@ -474,7 +472,7 @@ describe('MapCard - Fullscreen Transitions Integration', () => {
       // Verify map state is preserved (now there are two containers: card + fullscreen)
       const fullscreenMapContainers = screen.getAllByTestId('map-container');
       expect(fullscreenMapContainers).toHaveLength(2);
-      
+
       // Both should have the same center and zoom
       fullscreenMapContainers.forEach((container) => {
         expect(container.getAttribute('data-center')).toBe(initialCenter);
@@ -488,7 +486,7 @@ describe('MapCard - Fullscreen Transitions Integration', () => {
       render(
         <StoreProvider>
           <MapCard />
-        </StoreProvider>
+        </StoreProvider>,
       );
 
       await waitFor(() => {
@@ -516,9 +514,12 @@ describe('MapCard - Fullscreen Transitions Integration', () => {
       const closeButton = screen.getByLabelText('Exit fullscreen');
       fireEvent.click(closeButton);
 
-      await waitFor(() => {
-        expect(screen.getByLabelText('Expand map')).toBeInTheDocument();
-      }, { timeout: 1000 });
+      await waitFor(
+        () => {
+          expect(screen.getByLabelText('Expand map')).toBeInTheDocument();
+        },
+        { timeout: 1000 },
+      );
 
       // Verify map state is preserved (back to one container)
       const cardMapContainers = screen.getAllByTestId('map-container');
@@ -536,7 +537,7 @@ describe('MapCard - Fullscreen Transitions Integration', () => {
       render(
         <StoreProvider>
           <MapCard />
-        </StoreProvider>
+        </StoreProvider>,
       );
 
       await waitFor(() => {
@@ -561,9 +562,12 @@ describe('MapCard - Fullscreen Transitions Integration', () => {
 
       // Back to card view
       fireEvent.click(screen.getByLabelText('Exit fullscreen'));
-      await waitFor(() => {
-        expect(screen.getByLabelText('Expand map')).toBeInTheDocument();
-      }, { timeout: 1000 });
+      await waitFor(
+        () => {
+          expect(screen.getByLabelText('Expand map')).toBeInTheDocument();
+        },
+        { timeout: 1000 },
+      );
 
       // Wait for transition
       await new Promise((resolve) => setTimeout(resolve, 600));
@@ -599,7 +603,7 @@ describe('MapCard - Fullscreen Transitions Integration', () => {
       render(
         <StoreProvider>
           <MapCard />
-        </StoreProvider>
+        </StoreProvider>,
       );
 
       // Wait for pins to render in card view
@@ -637,7 +641,7 @@ describe('MapCard - Fullscreen Transitions Integration', () => {
       render(
         <StoreProvider>
           <MapCard />
-        </StoreProvider>
+        </StoreProvider>,
       );
 
       await waitFor(() => {
@@ -672,7 +676,7 @@ describe('MapCard - Fullscreen Transitions Integration', () => {
       render(
         <StoreProvider>
           <MapCard />
-        </StoreProvider>
+        </StoreProvider>,
       );
 
       await waitFor(() => {
@@ -704,7 +708,7 @@ describe('MapCard - Fullscreen Transitions Integration', () => {
       render(
         <StoreProvider>
           <MapCard />
-        </StoreProvider>
+        </StoreProvider>,
       );
 
       await waitFor(() => {
@@ -732,7 +736,7 @@ describe('MapCard - Fullscreen Transitions Integration', () => {
       render(
         <StoreProvider>
           <MapCard />
-        </StoreProvider>
+        </StoreProvider>,
       );
 
       await waitFor(() => {
@@ -764,7 +768,7 @@ describe('MapCard - Fullscreen Transitions Integration', () => {
       render(
         <StoreProvider>
           <MapCard />
-        </StoreProvider>
+        </StoreProvider>,
       );
 
       // Enter fullscreen
@@ -807,7 +811,7 @@ describe('MapCard - Fullscreen Transitions Integration', () => {
       render(
         <StoreProvider>
           <MapCard />
-        </StoreProvider>
+        </StoreProvider>,
       );
 
       await waitFor(() => {
@@ -835,7 +839,7 @@ describe('MapCard - Fullscreen Transitions Integration', () => {
       render(
         <StoreProvider>
           <MapCard />
-        </StoreProvider>
+        </StoreProvider>,
       );
 
       // Enter fullscreen
@@ -864,9 +868,12 @@ describe('MapCard - Fullscreen Transitions Integration', () => {
       // The button should be disabled immediately after clicking (during transition)
       // However, in the test environment, this might be hard to catch due to timing
       // So we just verify that the transition completes successfully
-      await waitFor(() => {
-        expect(screen.getByLabelText('Expand map')).toBeInTheDocument();
-      }, { timeout: 1000 });
+      await waitFor(
+        () => {
+          expect(screen.getByLabelText('Expand map')).toBeInTheDocument();
+        },
+        { timeout: 1000 },
+      );
     });
 
     it('ignores Escape key during transition', async () => {
@@ -875,7 +882,7 @@ describe('MapCard - Fullscreen Transitions Integration', () => {
       render(
         <StoreProvider>
           <MapCard />
-        </StoreProvider>
+        </StoreProvider>,
       );
 
       // Enter fullscreen

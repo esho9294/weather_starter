@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef, useMemo } from 'react';
+import { useCallback, useEffect, useState, useRef, useMemo } from 'react';
 import { MapContainer, TileLayer } from 'react-leaflet';
 import { useStore } from '../state/store';
 import { FullscreenPortal } from './FullscreenPortal';
@@ -14,10 +14,11 @@ const DEFAULT_ZOOM = 11;
 const MIN_ZOOM = 1;
 const MAX_ZOOM = 18;
 const TRANSITION_DURATION = 500; // milliseconds
-const MAP_INIT_TIMEOUT = 2000; // 2 seconds
 
 // Gray placeholder tile for error state
-const ERROR_TILE_URL = 'data:image/svg+xml;base64,' + btoa(`
+const ERROR_TILE_URL =
+  'data:image/svg+xml;base64,' +
+  btoa(`
   <svg xmlns="http://www.w3.org/2000/svg" width="256" height="256">
     <rect width="256" height="256" fill="#e5e7eb"/>
     <text x="50%" y="50%" text-anchor="middle" dy=".3em" fill="#6b7280" font-family="Arial" font-size="14">
@@ -30,8 +31,8 @@ export function MapCard() {
   const { locations, selectedId, select } = useStore();
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [isTransitioning, setIsTransitioning] = useState(false);
-  const [mapInstance, setMapInstance] = useState<LeafletMap | null>(null);
-  const [mapError, setMapError] = useState<string | null>(null);
+  const [mapInstance, _setMapInstance] = useState<LeafletMap | null>(null);
+  const [mapError, _setMapError] = useState<string | null>(null);
   const [tileError, setTileError] = useState<string | null>(null);
   const transitionTimerRef = useRef<NodeJS.Timeout | null>(null);
   const tileErrorCountRef = useRef<number>(0);
@@ -50,10 +51,7 @@ export function MapCard() {
 
     // Convert lat/lng to pixel coordinates for collision detection
     const positions: LabelPosition[] = validLocations.map((location) => {
-      const point = mapInstance.latLngToContainerPoint([
-        location.latitude,
-        location.longitude,
-      ]);
+      const point = mapInstance.latLngToContainerPoint([location.latitude, location.longitude]);
       return {
         x: point.x,
         y: point.y,
@@ -62,11 +60,11 @@ export function MapCard() {
     });
 
     // Apply collision detection
-    const resolved = resolveCollisions(positions);
+    resolveCollisions(positions);
 
     // Create a map of location ID to label position (above/below)
     const positionMap = new Map<number, 'above' | 'below'>();
-    
+
     // For now, all labels are 'above' by default
     // The collision detection adjusts the y-offset, which is handled in the icon HTML
     validLocations.forEach((location) => {
@@ -81,6 +79,34 @@ export function MapCard() {
     select(locationId);
   };
 
+  const handleExpandClick = useCallback(() => {
+    // Ignore clicks during transitions
+    if (isTransitioning) return;
+
+    setIsTransitioning(true);
+    setIsFullscreen(true);
+
+    // Clear transition flag after animation completes
+    transitionTimerRef.current = setTimeout(() => {
+      setIsTransitioning(false);
+      transitionTimerRef.current = null;
+    }, TRANSITION_DURATION);
+  }, [isTransitioning]);
+
+  const handleCloseClick = useCallback(() => {
+    // Ignore clicks during transitions
+    if (isTransitioning) return;
+
+    setIsTransitioning(true);
+    setIsFullscreen(false);
+
+    // Clear transition flag after animation completes
+    transitionTimerRef.current = setTimeout(() => {
+      setIsTransitioning(false);
+      transitionTimerRef.current = null;
+    }, TRANSITION_DURATION);
+  }, [isTransitioning]);
+
   // Handle Escape key to exit fullscreen
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
@@ -91,7 +117,7 @@ export function MapCard() {
 
     window.addEventListener('keydown', handleEscape);
     return () => window.removeEventListener('keydown', handleEscape);
-  }, [isFullscreen, isTransitioning]);
+  }, [isFullscreen, isTransitioning, handleCloseClick]);
 
   // Handle viewport resize to adjust map dimensions
   useEffect(() => {
@@ -109,7 +135,7 @@ export function MapCard() {
     };
 
     window.addEventListener('resize', handleResize);
-    
+
     return () => {
       clearTimeout(resizeTimer);
       window.removeEventListener('resize', handleResize);
@@ -138,38 +164,10 @@ export function MapCard() {
     };
   }, [mapInstance]);
 
-  const handleExpandClick = () => {
-    // Ignore clicks during transitions
-    if (isTransitioning) return;
-
-    setIsTransitioning(true);
-    setIsFullscreen(true);
-
-    // Clear transition flag after animation completes
-    transitionTimerRef.current = setTimeout(() => {
-      setIsTransitioning(false);
-      transitionTimerRef.current = null;
-    }, TRANSITION_DURATION);
-  };
-
-  const handleCloseClick = () => {
-    // Ignore clicks during transitions
-    if (isTransitioning) return;
-
-    setIsTransitioning(true);
-    setIsFullscreen(false);
-
-    // Clear transition flag after animation completes
-    transitionTimerRef.current = setTimeout(() => {
-      setIsTransitioning(false);
-      transitionTimerRef.current = null;
-    }, TRANSITION_DURATION);
-  };
-
   // Handle tile loading errors
   const handleTileError = () => {
     tileErrorCountRef.current += 1;
-    
+
     // After 3 failed attempts, show error message
     if (tileErrorCountRef.current >= 3) {
       setTileError('Map tiles unavailable. Please check your connection.');
@@ -205,7 +203,13 @@ export function MapCard() {
 
   // Render map content function to create fresh instances
   const renderMapContent = (isFullscreenView: boolean) => (
-    <div className={`relative ${isFullscreenView ? 'h-screen w-screen' : 'h-full w-full flex-1'}`} style={{ minHeight: isFullscreenView ? '100vh' : '300px', height: isFullscreenView ? '100vh' : '100%' }}>
+    <div
+      className={`relative ${isFullscreenView ? 'h-screen w-screen' : 'h-full w-full flex-1'}`}
+      style={{
+        minHeight: isFullscreenView ? '100vh' : '300px',
+        height: isFullscreenView ? '100vh' : '100%',
+      }}
+    >
       {/* Tile error message */}
       {tileError && (
         <div className="absolute top-16 left-1/2 transform -translate-x-1/2 z-[1000] bg-red-500/90 text-white px-4 py-2 rounded-lg shadow-lg text-sm">
@@ -244,7 +248,7 @@ export function MapCard() {
         zoom={DEFAULT_ZOOM}
         minZoom={MIN_ZOOM}
         maxZoom={MAX_ZOOM}
-        className={isFullscreenView ? "h-screen w-screen" : "h-full w-full rounded-2xl"}
+        className={isFullscreenView ? 'h-screen w-screen' : 'h-full w-full rounded-2xl'}
         style={{ minHeight: isFullscreenView ? '100vh' : '400px', height: '100%', width: '100%' }}
         dragging={true}
         touchZoom={true}
@@ -252,10 +256,10 @@ export function MapCard() {
         doubleClickZoom={true}
         zoomControl={true}
         tapTolerance={5}
-        whenReady={(map) => {
+        whenReady={() => {
           // Force map to recalculate size when ready
           setTimeout(() => {
-            map.target.invalidateSize();
+            mapInstance?.invalidateSize();
           }, 100);
         }}
       >
@@ -267,7 +271,7 @@ export function MapCard() {
             tileerror: handleTileError,
           }}
         />
-        
+
         {/* Render location markers */}
         {validLocations.map((location) => (
           <LocationMarker
@@ -300,7 +304,11 @@ export function MapCard() {
 
       {/* Fullscreen view using portal */}
       {isFullscreen && (
-        <FullscreenPortal isOpen={isFullscreen} onClose={handleCloseClick} isTransitioning={isTransitioning}>
+        <FullscreenPortal
+          isOpen={isFullscreen}
+          onClose={handleCloseClick}
+          isTransitioning={isTransitioning}
+        >
           {renderMapContent(true)}
         </FullscreenPortal>
       )}

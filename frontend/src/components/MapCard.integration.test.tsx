@@ -1,8 +1,8 @@
 /**
  * Integration tests for MapCard location pin rendering
- * 
+ *
  * **Validates: Requirements 2.1, 2.2, 2.3, 2.4, 2.5, 2.6**
- * 
+ *
  * Tests cover:
  * - Pins render for all valid locations (Requirement 2.1)
  * - Pins not rendered for invalid coordinates (Requirement 2.6)
@@ -50,8 +50,12 @@ vi.mock('./LocationMarker', () => ({
 // Mock mapUtils
 vi.mock('./mapUtils', () => ({
   validateCoordinates: (location: any) => {
-    return location.latitude >= -90 && location.latitude <= 90 &&
-           location.longitude >= -180 && location.longitude <= 180;
+    return (
+      location.latitude >= -90 &&
+      location.latitude <= 90 &&
+      location.longitude >= -180 &&
+      location.longitude <= 180
+    );
   },
 }));
 
@@ -119,7 +123,7 @@ describe('MapCard - Location Pin Rendering Integration', () => {
     it('renders pins for all valid locations', async () => {
       const mockLocations = [
         createMockLocation(1, 1.3521, 103.8198), // Singapore
-        createMockLocation(2, 40.7128, -74.0060), // New York
+        createMockLocation(2, 40.7128, -74.006), // New York
         createMockLocation(3, -33.8688, 151.2093), // Sydney
       ];
       mockListLocations.mockResolvedValue({ locations: mockLocations });
@@ -127,13 +131,13 @@ describe('MapCard - Location Pin Rendering Integration', () => {
       render(
         <StoreProvider>
           <MapCard />
-        </StoreProvider>
+        </StoreProvider>,
       );
 
       await waitFor(() => {
         const markers = screen.getAllByTestId('location-marker');
         expect(markers).toHaveLength(3);
-        
+
         // Verify each location has a marker
         expect(markers[0]).toHaveAttribute('data-location-id', '1');
         expect(markers[1]).toHaveAttribute('data-location-id', '2');
@@ -152,7 +156,7 @@ describe('MapCard - Location Pin Rendering Integration', () => {
       render(
         <StoreProvider>
           <MapCard />
-        </StoreProvider>
+        </StoreProvider>,
       );
 
       await waitFor(() => {
@@ -167,7 +171,7 @@ describe('MapCard - Location Pin Rendering Integration', () => {
       render(
         <StoreProvider>
           <MapCard />
-        </StoreProvider>
+        </StoreProvider>,
       );
 
       await waitFor(() => {
@@ -188,7 +192,7 @@ describe('MapCard - Location Pin Rendering Integration', () => {
       render(
         <StoreProvider>
           <MapCard />
-        </StoreProvider>
+        </StoreProvider>,
       );
 
       await waitFor(() => {
@@ -209,7 +213,7 @@ describe('MapCard - Location Pin Rendering Integration', () => {
       render(
         <StoreProvider>
           <MapCard />
-        </StoreProvider>
+        </StoreProvider>,
       );
 
       await waitFor(() => {
@@ -229,7 +233,7 @@ describe('MapCard - Location Pin Rendering Integration', () => {
       render(
         <StoreProvider>
           <MapCard />
-        </StoreProvider>
+        </StoreProvider>,
       );
 
       await waitFor(() => {
@@ -249,7 +253,7 @@ describe('MapCard - Location Pin Rendering Integration', () => {
       render(
         <StoreProvider>
           <MapCard />
-        </StoreProvider>
+        </StoreProvider>,
       );
 
       await waitFor(() => {
@@ -263,7 +267,7 @@ describe('MapCard - Location Pin Rendering Integration', () => {
       const mockLocations = [
         createMockLocation(1, 1.3521, 103.8198), // Valid
         createMockLocation(2, 91, 103.8198), // Invalid latitude
-        createMockLocation(3, 40.7128, -74.0060), // Valid
+        createMockLocation(3, 40.7128, -74.006), // Valid
         createMockLocation(4, 1.3521, 181), // Invalid longitude
         createMockLocation(5, -33.8688, 151.2093), // Valid
       ];
@@ -272,7 +276,7 @@ describe('MapCard - Location Pin Rendering Integration', () => {
       render(
         <StoreProvider>
           <MapCard />
-        </StoreProvider>
+        </StoreProvider>,
       );
 
       await waitFor(() => {
@@ -294,7 +298,7 @@ describe('MapCard - Location Pin Rendering Integration', () => {
       render(
         <StoreProvider>
           <MapCard />
-        </StoreProvider>
+        </StoreProvider>,
       );
 
       await waitFor(() => {
@@ -307,16 +311,16 @@ describe('MapCard - Location Pin Rendering Integration', () => {
       // Test with multiple locations from the start
       const locations = [
         createMockLocation(1, 1.3521, 103.8198),
-        createMockLocation(2, 40.7128, -74.0060),
+        createMockLocation(2, 40.7128, -74.006),
       ];
       mockListLocations.mockResolvedValue({ locations });
 
       const startTime = Date.now();
-      
+
       render(
         <StoreProvider>
           <MapCard />
-        </StoreProvider>
+        </StoreProvider>,
       );
 
       await waitFor(
@@ -324,9 +328,9 @@ describe('MapCard - Location Pin Rendering Integration', () => {
           const markers = screen.getAllByTestId('location-marker');
           expect(markers).toHaveLength(2);
         },
-        { timeout: 500 }
+        { timeout: 500 },
       );
-      
+
       const endTime = Date.now();
 
       // Verify rendering completed within 500ms
@@ -343,7 +347,7 @@ describe('MapCard - Location Pin Rendering Integration', () => {
       render(
         <StoreProvider>
           <MapCard />
-        </StoreProvider>
+        </StoreProvider>,
       );
 
       const startTime = Date.now();
@@ -353,7 +357,7 @@ describe('MapCard - Location Pin Rendering Integration', () => {
           expect(markers).toHaveLength(1);
           expect(markers[0]).toHaveAttribute('data-location-id', '1');
         },
-        { timeout: 500 }
+        { timeout: 500 },
       );
       const endTime = Date.now();
 
@@ -367,7 +371,7 @@ describe('MapCard - Location Pin Rendering Integration', () => {
       render(
         <StoreProvider>
           <MapCard />
-        </StoreProvider>
+        </StoreProvider>,
       );
 
       const startTime = Date.now();
@@ -376,7 +380,7 @@ describe('MapCard - Location Pin Rendering Integration', () => {
           expect(screen.queryByTestId('location-marker')).not.toBeInTheDocument();
           expect(screen.getByText('No locations saved yet')).toBeInTheDocument();
         },
-        { timeout: 500 }
+        { timeout: 500 },
       );
       const endTime = Date.now();
 
@@ -395,7 +399,7 @@ describe('MapCard - Location Pin Rendering Integration', () => {
       render(
         <StoreProvider>
           <MapCard />
-        </StoreProvider>
+        </StoreProvider>,
       );
 
       await waitFor(() => {
@@ -409,23 +413,24 @@ describe('MapCard - Location Pin Rendering Integration', () => {
 
       const locations = [
         createMockLocation(1, 1.3521, 103.8198),
-        createMockLocation(2, 40.7128, -74.0060),
+        createMockLocation(2, 40.7128, -74.006),
       ];
       mockListLocations.mockResolvedValue({ locations });
 
       render(
         <StoreProvider>
           <MapCard />
-        </StoreProvider>
+        </StoreProvider>,
       );
 
       await waitFor(() => {
         expect(mockUseMapController).toHaveBeenCalled();
-        
+
         // Get the last call to the hook
-        const lastCall = mockUseMapController.mock.calls[mockUseMapController.mock.calls.length - 1];
+        const lastCall =
+          mockUseMapController.mock.calls[mockUseMapController.mock.calls.length - 1];
         const passedLocations = lastCall[1]; // Second parameter is locations array
-        
+
         // Verify the locations array was passed
         expect(passedLocations).toBeDefined();
       });
@@ -440,12 +445,12 @@ describe('MapCard - Location Pin Rendering Integration', () => {
       render(
         <StoreProvider>
           <MapCard />
-        </StoreProvider>
+        </StoreProvider>,
       );
 
       await waitFor(() => {
         expect(mockUseMapController).toHaveBeenCalled();
-        
+
         // Verify hook was called with empty locations array
         const calls = mockUseMapController.mock.calls;
         expect(calls.length).toBeGreaterThan(0);
@@ -457,14 +462,14 @@ describe('MapCard - Location Pin Rendering Integration', () => {
     it('calls select with location ID when pin is clicked', async () => {
       const mockLocations = [
         createMockLocation(1, 1.3521, 103.8198),
-        createMockLocation(2, 40.7128, -74.0060),
+        createMockLocation(2, 40.7128, -74.006),
       ];
       mockListLocations.mockResolvedValue({ locations: mockLocations });
 
       render(
         <StoreProvider>
           <MapCard />
-        </StoreProvider>
+        </StoreProvider>,
       );
 
       await waitFor(() => {
@@ -487,7 +492,7 @@ describe('MapCard - Location Pin Rendering Integration', () => {
     it('updates isSelected prop when different pin is clicked', async () => {
       const mockLocations = [
         createMockLocation(1, 1.3521, 103.8198),
-        createMockLocation(2, 40.7128, -74.0060),
+        createMockLocation(2, 40.7128, -74.006),
         createMockLocation(3, -33.8688, 151.2093),
       ];
       mockListLocations.mockResolvedValue({ locations: mockLocations });
@@ -495,7 +500,7 @@ describe('MapCard - Location Pin Rendering Integration', () => {
       render(
         <StoreProvider>
           <MapCard />
-        </StoreProvider>
+        </StoreProvider>,
       );
 
       await waitFor(() => {
@@ -539,20 +544,20 @@ describe('MapCard - Location Pin Rendering Integration', () => {
     it('passes correct isSelected prop based on selectedId from store', async () => {
       const mockLocations = [
         createMockLocation(1, 1.3521, 103.8198),
-        createMockLocation(2, 40.7128, -74.0060),
+        createMockLocation(2, 40.7128, -74.006),
       ];
       mockListLocations.mockResolvedValue({ locations: mockLocations });
 
       render(
         <StoreProvider>
           <MapCard />
-        </StoreProvider>
+        </StoreProvider>,
       );
 
       await waitFor(() => {
         const markers = screen.getAllByTestId('location-marker');
         expect(markers).toHaveLength(2);
-        
+
         // First location should be selected by default
         expect(markers[0]).toHaveAttribute('data-selected', 'true');
         expect(markers[1]).toHaveAttribute('data-selected', 'false');

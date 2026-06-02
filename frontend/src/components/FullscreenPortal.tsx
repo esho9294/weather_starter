@@ -8,13 +8,18 @@ interface FullscreenPortalProps {
   isTransitioning?: boolean;
 }
 
-export function FullscreenPortal({ isOpen, onClose, children, isTransitioning = false }: FullscreenPortalProps) {
+export function FullscreenPortal({
+  isOpen,
+  onClose,
+  children,
+  isTransitioning = false,
+}: FullscreenPortalProps) {
   // Prevent body scroll when portal is open
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = 'hidden';
     }
-    
+
     return () => {
       document.body.style.overflow = '';
     };
@@ -59,10 +64,8 @@ export function FullscreenPortal({ isOpen, onClose, children, isTransitioning = 
       </button>
 
       {/* Portal content */}
-      <div className="h-full w-full">
-        {children}
-      </div>
+      <div className="h-full w-full">{children}</div>
     </div>,
-    document.body
+    document.body,
   );
 }

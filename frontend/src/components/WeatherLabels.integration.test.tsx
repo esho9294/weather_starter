@@ -1,8 +1,8 @@
 /**
  * Integration tests for weather label display in LocationMarkers
- * 
+ *
  * **Validates: Requirements 3.2, 3.3, 3.4, 3.5, 3.6**
- * 
+ *
  * Tests cover:
  * - Labels display correct temperature or condition (Requirements 3.2, 3.3)
  * - Labels update within 200ms when weather refreshes (Requirement 3.4)
@@ -30,11 +30,7 @@ vi.mock('react-leaflet', () => ({
     // Extract the HTML from the divIcon to test label content
     const iconHtml = icon?.options?.html || '';
     return (
-      <div
-        data-testid="marker"
-        data-position={JSON.stringify(position)}
-        data-icon-html={iconHtml}
-      >
+      <div data-testid="marker" data-position={JSON.stringify(position)} data-icon-html={iconHtml}>
         {children}
       </div>
     );
@@ -44,8 +40,12 @@ vi.mock('react-leaflet', () => ({
 // Mock mapUtils
 vi.mock('./mapUtils', () => ({
   validateCoordinates: (location: any) => {
-    return location.latitude >= -90 && location.latitude <= 90 &&
-           location.longitude >= -180 && location.longitude <= 180;
+    return (
+      location.latitude >= -90 &&
+      location.latitude <= 90 &&
+      location.longitude >= -180 &&
+      location.longitude <= 180
+    );
   },
 }));
 
@@ -74,7 +74,7 @@ function createMockLocation(
   id: number,
   latitude: number,
   longitude: number,
-  weatherOverrides?: any
+  weatherOverrides?: any,
 ): Location {
   return {
     id,
@@ -117,21 +117,19 @@ describe('WeatherLabels Integration Tests', () => {
 
   describe('labels display correct temperature or condition (Requirements 3.2, 3.3)', () => {
     it('displays temperature in "{temp}°C" format when temperature is available', async () => {
-      const mockLocations = [
-        createMockLocation(1, 1.3521, 103.8198, { temperature_c: 28 }),
-      ];
+      const mockLocations = [createMockLocation(1, 1.3521, 103.8198, { temperature_c: 28 })];
       mockListLocations.mockResolvedValue({ locations: mockLocations });
 
       render(
         <StoreProvider>
           <MapCard />
-        </StoreProvider>
+        </StoreProvider>,
       );
 
       await waitFor(() => {
         const markers = screen.getAllByTestId('marker');
         expect(markers).toHaveLength(1);
-        
+
         const iconHtml = markers[0].getAttribute('data-icon-html') || '';
         expect(iconHtml).toContain('28°C');
       });
@@ -149,13 +147,13 @@ describe('WeatherLabels Integration Tests', () => {
       render(
         <StoreProvider>
           <MapCard />
-        </StoreProvider>
+        </StoreProvider>,
       );
 
       await waitFor(() => {
         const markers = screen.getAllByTestId('marker');
         expect(markers).toHaveLength(1);
-        
+
         const iconHtml = markers[0].getAttribute('data-icon-html') || '';
         expect(iconHtml).toContain('Partly Cloudy');
       });
@@ -164,7 +162,7 @@ describe('WeatherLabels Integration Tests', () => {
     it('displays different temperatures for different locations', async () => {
       const mockLocations = [
         createMockLocation(1, 1.3521, 103.8198, { temperature_c: 28 }),
-        createMockLocation(2, 40.7128, -74.0060, { temperature_c: 15 }),
+        createMockLocation(2, 40.7128, -74.006, { temperature_c: 15 }),
         createMockLocation(3, -33.8688, 151.2093, { temperature_c: 22 }),
       ];
       mockListLocations.mockResolvedValue({ locations: mockLocations });
@@ -172,17 +170,17 @@ describe('WeatherLabels Integration Tests', () => {
       render(
         <StoreProvider>
           <MapCard />
-        </StoreProvider>
+        </StoreProvider>,
       );
 
       await waitFor(() => {
         const markers = screen.getAllByTestId('marker');
         expect(markers).toHaveLength(3);
-        
+
         const iconHtml1 = markers[0].getAttribute('data-icon-html') || '';
         const iconHtml2 = markers[1].getAttribute('data-icon-html') || '';
         const iconHtml3 = markers[2].getAttribute('data-icon-html') || '';
-        
+
         expect(iconHtml1).toContain('28°C');
         expect(iconHtml2).toContain('15°C');
         expect(iconHtml3).toContain('22°C');
@@ -195,7 +193,7 @@ describe('WeatherLabels Integration Tests', () => {
           temperature_c: null,
           condition: 'Sunny',
         }),
-        createMockLocation(2, 40.7128, -74.0060, {
+        createMockLocation(2, 40.7128, -74.006, {
           temperature_c: null,
           condition: 'Rainy',
         }),
@@ -209,17 +207,17 @@ describe('WeatherLabels Integration Tests', () => {
       render(
         <StoreProvider>
           <MapCard />
-        </StoreProvider>
+        </StoreProvider>,
       );
 
       await waitFor(() => {
         const markers = screen.getAllByTestId('marker');
         expect(markers).toHaveLength(3);
-        
+
         const iconHtml1 = markers[0].getAttribute('data-icon-html') || '';
         const iconHtml2 = markers[1].getAttribute('data-icon-html') || '';
         const iconHtml3 = markers[2].getAttribute('data-icon-html') || '';
-        
+
         expect(iconHtml1).toContain('Sunny');
         expect(iconHtml2).toContain('Rainy');
         expect(iconHtml3).toContain('Cloudy');
@@ -238,13 +236,13 @@ describe('WeatherLabels Integration Tests', () => {
       render(
         <StoreProvider>
           <MapCard />
-        </StoreProvider>
+        </StoreProvider>,
       );
 
       await waitFor(() => {
         const markers = screen.getAllByTestId('marker');
         expect(markers).toHaveLength(1);
-        
+
         const iconHtml = markers[0].getAttribute('data-icon-html') || '';
         // Should show temperature, not condition
         expect(iconHtml).toContain('25°C');
@@ -255,23 +253,23 @@ describe('WeatherLabels Integration Tests', () => {
     it('rounds temperature correctly', async () => {
       const mockLocations = [
         createMockLocation(1, 1.3521, 103.8198, { temperature_c: 28.4 }),
-        createMockLocation(2, 40.7128, -74.0060, { temperature_c: 28.6 }),
+        createMockLocation(2, 40.7128, -74.006, { temperature_c: 28.6 }),
       ];
       mockListLocations.mockResolvedValue({ locations: mockLocations });
 
       render(
         <StoreProvider>
           <MapCard />
-        </StoreProvider>
+        </StoreProvider>,
       );
 
       await waitFor(() => {
         const markers = screen.getAllByTestId('marker');
         expect(markers).toHaveLength(2);
-        
+
         const iconHtml1 = markers[0].getAttribute('data-icon-html') || '';
         const iconHtml2 = markers[1].getAttribute('data-icon-html') || '';
-        
+
         // 28.4 rounds down to 28
         expect(iconHtml1).toContain('28°C');
         // 28.6 rounds up to 29
@@ -283,28 +281,26 @@ describe('WeatherLabels Integration Tests', () => {
   describe('labels update within 200ms when weather refreshes (Requirement 3.4)', () => {
     it('renders labels quickly on initial load', async () => {
       // Test that labels render within 200ms on initial load
-      const mockLocations = [
-        createMockLocation(1, 1.3521, 103.8198, { temperature_c: 25 }),
-      ];
+      const mockLocations = [createMockLocation(1, 1.3521, 103.8198, { temperature_c: 25 })];
       mockListLocations.mockResolvedValue({ locations: mockLocations });
 
       const startTime = Date.now();
-      
+
       render(
         <StoreProvider>
           <MapCard />
-        </StoreProvider>
+        </StoreProvider>,
       );
 
       await waitFor(
         () => {
           const markers = screen.getAllByTestId('marker');
           expect(markers).toHaveLength(1);
-          
+
           const iconHtml = markers[0].getAttribute('data-icon-html') || '';
           expect(iconHtml).toContain('25°C');
         },
-        { timeout: 200 }
+        { timeout: 200 },
       );
 
       const endTime = Date.now();
@@ -318,33 +314,33 @@ describe('WeatherLabels Integration Tests', () => {
       // Test that multiple labels render within 200ms
       const mockLocations = [
         createMockLocation(1, 1.3521, 103.8198, { temperature_c: 25 }),
-        createMockLocation(2, 40.7128, -74.0060, { temperature_c: 15 }),
+        createMockLocation(2, 40.7128, -74.006, { temperature_c: 15 }),
         createMockLocation(3, -33.8688, 151.2093, { temperature_c: 22 }),
       ];
       mockListLocations.mockResolvedValue({ locations: mockLocations });
 
       const startTime = Date.now();
-      
+
       render(
         <StoreProvider>
           <MapCard />
-        </StoreProvider>
+        </StoreProvider>,
       );
 
       await waitFor(
         () => {
           const markers = screen.getAllByTestId('marker');
           expect(markers).toHaveLength(3);
-          
+
           const iconHtml1 = markers[0].getAttribute('data-icon-html') || '';
           const iconHtml2 = markers[1].getAttribute('data-icon-html') || '';
           const iconHtml3 = markers[2].getAttribute('data-icon-html') || '';
-          
+
           expect(iconHtml1).toContain('25°C');
           expect(iconHtml2).toContain('15°C');
           expect(iconHtml3).toContain('22°C');
         },
-        { timeout: 200 }
+        { timeout: 200 },
       );
 
       const endTime = Date.now();
@@ -362,11 +358,11 @@ describe('WeatherLabels Integration Tests', () => {
       mockListLocations.mockResolvedValue({ locations: mockLocations });
 
       const startTime = Date.now();
-      
+
       render(
         <StoreProvider>
           <MapCard />
-        </StoreProvider>
+        </StoreProvider>,
       );
 
       await waitFor(
@@ -375,7 +371,7 @@ describe('WeatherLabels Integration Tests', () => {
           const iconHtml = markers[0].getAttribute('data-icon-html') || '';
           expect(iconHtml).toContain('Rainy');
         },
-        { timeout: 200 }
+        { timeout: 200 },
       );
 
       const endTime = Date.now();
@@ -393,11 +389,11 @@ describe('WeatherLabels Integration Tests', () => {
       mockListLocations.mockResolvedValue({ locations: mockLocations });
 
       const startTime = Date.now();
-      
+
       render(
         <StoreProvider>
           <MapCard />
-        </StoreProvider>
+        </StoreProvider>,
       );
 
       await waitFor(
@@ -406,7 +402,7 @@ describe('WeatherLabels Integration Tests', () => {
           const iconHtml = markers[0].getAttribute('data-icon-html') || '';
           expect(iconHtml).toContain('--');
         },
-        { timeout: 200 }
+        { timeout: 200 },
       );
 
       const endTime = Date.now();
@@ -416,23 +412,21 @@ describe('WeatherLabels Integration Tests', () => {
     it('applies 200ms transition timing to labels', async () => {
       // Verify that labels have the correct transition timing configured
       // This ensures smooth updates when weather data changes
-      const mockLocations = [
-        createMockLocation(1, 1.3521, 103.8198, { temperature_c: 25 }),
-      ];
+      const mockLocations = [createMockLocation(1, 1.3521, 103.8198, { temperature_c: 25 })];
       mockListLocations.mockResolvedValue({ locations: mockLocations });
 
       render(
         <StoreProvider>
           <MapCard />
-        </StoreProvider>
+        </StoreProvider>,
       );
 
       await waitFor(() => {
         const markers = screen.getAllByTestId('marker');
         expect(markers).toHaveLength(1);
-        
+
         const iconHtml = markers[0].getAttribute('data-icon-html') || '';
-        
+
         // Verify transition timing is set to 200ms
         expect(iconHtml).toContain('transition: all 200ms ease-in-out');
       });
@@ -443,21 +437,19 @@ describe('WeatherLabels Integration Tests', () => {
     it('applies labelPosition prop to LocationMarker for collision avoidance', async () => {
       // This test verifies that the LocationMarker component accepts and uses
       // the labelPosition prop, which is used by collision detection logic
-      const mockLocations = [
-        createMockLocation(1, 1.3521, 103.8198, { temperature_c: 25 }),
-      ];
+      const mockLocations = [createMockLocation(1, 1.3521, 103.8198, { temperature_c: 25 })];
       mockListLocations.mockResolvedValue({ locations: mockLocations });
 
       render(
         <StoreProvider>
           <MapCard />
-        </StoreProvider>
+        </StoreProvider>,
       );
 
       await waitFor(() => {
         const markers = screen.getAllByTestId('marker');
         expect(markers).toHaveLength(1);
-        
+
         const iconHtml = markers[0].getAttribute('data-icon-html') || '';
         // Default position should be 'above' (bottom: 61px)
         expect(iconHtml).toContain('bottom: 61px');
@@ -468,21 +460,19 @@ describe('WeatherLabels Integration Tests', () => {
       // Note: In the actual implementation, collision detection would be handled
       // by the MapCard component, which would pass labelPosition='below' to
       // LocationMarker components that need to avoid collisions
-      const mockLocations = [
-        createMockLocation(1, 1.3521, 103.8198, { temperature_c: 25 }),
-      ];
+      const mockLocations = [createMockLocation(1, 1.3521, 103.8198, { temperature_c: 25 })];
       mockListLocations.mockResolvedValue({ locations: mockLocations });
 
       render(
         <StoreProvider>
           <MapCard />
-        </StoreProvider>
+        </StoreProvider>,
       );
 
       await waitFor(() => {
         const markers = screen.getAllByTestId('marker');
         expect(markers).toHaveLength(1);
-        
+
         // Verify that the label positioning is configurable
         // The actual collision detection logic would determine when to use 'below'
         const iconHtml = markers[0].getAttribute('data-icon-html') || '';
@@ -497,20 +487,20 @@ describe('WeatherLabels Integration Tests', () => {
       const mockLocations = [
         createMockLocation(1, 1.3521, 103.8198, { temperature_c: 25 }),
         createMockLocation(2, 1.3522, 103.8199, { temperature_c: 26 }), // Very close
-        createMockLocation(3, 1.3523, 103.8200, { temperature_c: 27 }), // Also close
+        createMockLocation(3, 1.3523, 103.82, { temperature_c: 27 }), // Also close
       ];
       mockListLocations.mockResolvedValue({ locations: mockLocations });
 
       render(
         <StoreProvider>
           <MapCard />
-        </StoreProvider>
+        </StoreProvider>,
       );
 
       await waitFor(() => {
         const markers = screen.getAllByTestId('marker');
         expect(markers).toHaveLength(3);
-        
+
         // All markers should have labels
         markers.forEach((marker) => {
           const iconHtml = marker.getAttribute('data-icon-html') || '';
@@ -532,18 +522,18 @@ describe('WeatherLabels Integration Tests', () => {
       render(
         <StoreProvider>
           <MapCard />
-        </StoreProvider>
+        </StoreProvider>,
       );
 
       await waitFor(() => {
         const markers = screen.getAllByTestId('marker');
         expect(markers).toHaveLength(3);
-        
+
         // Verify each marker has its own label with correct temperature
         const iconHtml1 = markers[0].getAttribute('data-icon-html') || '';
         const iconHtml2 = markers[1].getAttribute('data-icon-html') || '';
         const iconHtml3 = markers[2].getAttribute('data-icon-html') || '';
-        
+
         expect(iconHtml1).toContain('25°C');
         expect(iconHtml2).toContain('26°C');
         expect(iconHtml3).toContain('27°C');
@@ -564,13 +554,13 @@ describe('WeatherLabels Integration Tests', () => {
       render(
         <StoreProvider>
           <MapCard />
-        </StoreProvider>
+        </StoreProvider>,
       );
 
       await waitFor(() => {
         const markers = screen.getAllByTestId('marker');
         expect(markers).toHaveLength(1);
-        
+
         const iconHtml = markers[0].getAttribute('data-icon-html') || '';
         expect(iconHtml).toContain('--');
       });
@@ -588,13 +578,13 @@ describe('WeatherLabels Integration Tests', () => {
       render(
         <StoreProvider>
           <MapCard />
-        </StoreProvider>
+        </StoreProvider>,
       );
 
       await waitFor(() => {
         const markers = screen.getAllByTestId('marker');
         expect(markers).toHaveLength(1);
-        
+
         const iconHtml = markers[0].getAttribute('data-icon-html') || '';
         expect(iconHtml).toContain('--');
       });
@@ -612,13 +602,13 @@ describe('WeatherLabels Integration Tests', () => {
       render(
         <StoreProvider>
           <MapCard />
-        </StoreProvider>
+        </StoreProvider>,
       );
 
       await waitFor(() => {
         const markers = screen.getAllByTestId('marker');
         expect(markers).toHaveLength(1);
-        
+
         const iconHtml = markers[0].getAttribute('data-icon-html') || '';
         expect(iconHtml).toContain('--');
       });
@@ -630,7 +620,7 @@ describe('WeatherLabels Integration Tests', () => {
           temperature_c: null,
           condition: null,
         }),
-        createMockLocation(2, 40.7128, -74.0060, {
+        createMockLocation(2, 40.7128, -74.006, {
           temperature_c: null,
           condition: '',
         }),
@@ -644,13 +634,13 @@ describe('WeatherLabels Integration Tests', () => {
       render(
         <StoreProvider>
           <MapCard />
-        </StoreProvider>
+        </StoreProvider>,
       );
 
       await waitFor(() => {
         const markers = screen.getAllByTestId('marker');
         expect(markers).toHaveLength(3);
-        
+
         // All markers should display placeholder
         markers.forEach((marker) => {
           const iconHtml = marker.getAttribute('data-icon-html') || '';
@@ -662,7 +652,7 @@ describe('WeatherLabels Integration Tests', () => {
     it('displays mix of data and placeholders correctly', async () => {
       const mockLocations = [
         createMockLocation(1, 1.3521, 103.8198, { temperature_c: 25 }),
-        createMockLocation(2, 40.7128, -74.0060, {
+        createMockLocation(2, 40.7128, -74.006, {
           temperature_c: null,
           condition: null,
         }),
@@ -676,17 +666,17 @@ describe('WeatherLabels Integration Tests', () => {
       render(
         <StoreProvider>
           <MapCard />
-        </StoreProvider>
+        </StoreProvider>,
       );
 
       await waitFor(() => {
         const markers = screen.getAllByTestId('marker');
         expect(markers).toHaveLength(3);
-        
+
         const iconHtml1 = markers[0].getAttribute('data-icon-html') || '';
         const iconHtml2 = markers[1].getAttribute('data-icon-html') || '';
         const iconHtml3 = markers[2].getAttribute('data-icon-html') || '';
-        
+
         // First has temperature
         expect(iconHtml1).toContain('25°C');
         // Second has no data (placeholder)
@@ -699,23 +689,21 @@ describe('WeatherLabels Integration Tests', () => {
 
   describe('label styling and positioning', () => {
     it('applies correct styling to weather labels', async () => {
-      const mockLocations = [
-        createMockLocation(1, 1.3521, 103.8198, { temperature_c: 25 }),
-      ];
+      const mockLocations = [createMockLocation(1, 1.3521, 103.8198, { temperature_c: 25 })];
       mockListLocations.mockResolvedValue({ locations: mockLocations });
 
       render(
         <StoreProvider>
           <MapCard />
-        </StoreProvider>
+        </StoreProvider>,
       );
 
       await waitFor(() => {
         const markers = screen.getAllByTestId('marker');
         expect(markers).toHaveLength(1);
-        
+
         const iconHtml = markers[0].getAttribute('data-icon-html') || '';
-        
+
         // Verify styling (Requirement 3.7)
         expect(iconHtml).toContain('background-color: rgba(0, 0, 0, 0.8)');
         expect(iconHtml).toContain('color: white');
@@ -726,23 +714,21 @@ describe('WeatherLabels Integration Tests', () => {
     });
 
     it('positions label 20px above pin by default', async () => {
-      const mockLocations = [
-        createMockLocation(1, 1.3521, 103.8198, { temperature_c: 25 }),
-      ];
+      const mockLocations = [createMockLocation(1, 1.3521, 103.8198, { temperature_c: 25 })];
       mockListLocations.mockResolvedValue({ locations: mockLocations });
 
       render(
         <StoreProvider>
           <MapCard />
-        </StoreProvider>
+        </StoreProvider>,
       );
 
       await waitFor(() => {
         const markers = screen.getAllByTestId('marker');
         expect(markers).toHaveLength(1);
-        
+
         const iconHtml = markers[0].getAttribute('data-icon-html') || '';
-        
+
         // Label should be positioned above the pin (Requirement 3.1)
         // The pin is 41px tall, and the label is 20px above the pin center
         // So bottom should be 61px (41px pin height + 20px offset)
@@ -751,23 +737,21 @@ describe('WeatherLabels Integration Tests', () => {
     });
 
     it('applies 200ms transition to labels', async () => {
-      const mockLocations = [
-        createMockLocation(1, 1.3521, 103.8198, { temperature_c: 25 }),
-      ];
+      const mockLocations = [createMockLocation(1, 1.3521, 103.8198, { temperature_c: 25 })];
       mockListLocations.mockResolvedValue({ locations: mockLocations });
 
       render(
         <StoreProvider>
           <MapCard />
-        </StoreProvider>
+        </StoreProvider>,
       );
 
       await waitFor(() => {
         const markers = screen.getAllByTestId('marker');
         expect(markers).toHaveLength(1);
-        
+
         const iconHtml = markers[0].getAttribute('data-icon-html') || '';
-        
+
         // Verify transition timing (Requirement 3.4)
         expect(iconHtml).toContain('transition: all 200ms ease-in-out');
       });

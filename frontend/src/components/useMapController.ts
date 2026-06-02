@@ -6,14 +6,14 @@ import { validateCoordinates } from './mapUtils';
 
 /**
  * Custom hook that manages map instance lifecycle and automatic bounds adjustment.
- * 
+ *
  * Responsibilities:
  * - Calculate bounds to fit all valid location pins with 50px padding
  * - Trigger fitBounds when locations array changes
  * - Debounce bounds updates to 500ms to avoid excessive re-renders
  * - Preserve map center and zoom during fullscreen transitions
  * - Filter out locations with invalid coordinates
- * 
+ *
  * @param mapInstance - The Leaflet map instance (can be null during initialization)
  * @param locations - Array of locations to display on the map
  * @param isFullscreen - Whether the map is currently in fullscreen mode
@@ -21,7 +21,7 @@ import { validateCoordinates } from './mapUtils';
 export function useMapController(
   mapInstance: LeafletMap | null,
   locations: Location[],
-  isFullscreen: boolean
+  isFullscreen: boolean,
 ): void {
   const debounceTimerRef = useRef<NodeJS.Timeout | null>(null);
   const previousFullscreenRef = useRef<boolean>(isFullscreen);
@@ -46,9 +46,7 @@ export function useMapController(
     if (validLocations.length === 0) return null;
 
     // Create bounds from valid location coordinates
-    const bounds = L.latLngBounds(
-      validLocations.map(loc => [loc.latitude, loc.longitude])
-    );
+    const bounds = L.latLngBounds(validLocations.map((loc) => [loc.latitude, loc.longitude]));
 
     return bounds;
   };
@@ -126,5 +124,6 @@ export function useMapController(
         debounceTimerRef.current = null;
       }
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [locations, mapInstance]);
 }

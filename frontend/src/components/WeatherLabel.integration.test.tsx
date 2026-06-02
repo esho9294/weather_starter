@@ -1,8 +1,8 @@
 /**
  * Integration tests for WeatherLabel display in MapCard
- * 
+ *
  * **Validates: Requirements 3.2, 3.3, 3.4, 3.5, 3.6**
- * 
+ *
  * Tests cover:
  * - Labels display correct temperature or condition (Requirements 3.2, 3.3)
  * - Labels update within 200ms when weather refreshes (Requirement 3.4)
@@ -29,12 +29,12 @@ vi.mock('react-leaflet', () => ({
       getCenter: () => ({ lat: center[0], lng: center[1] }),
       getZoom: () => zoom,
     };
-    
+
     // Call ref callback if provided
     if (ref && typeof ref === 'function') {
       ref(mockMap);
     }
-    
+
     return (
       <div data-testid="map-container" data-center={JSON.stringify(center)} data-zoom={zoom}>
         {children}
@@ -52,15 +52,15 @@ vi.mock('./LocationMarker', () => ({
     // Determine what to display based on available weather data
     const getDisplayText = (): string => {
       const { weather } = location;
-      
+
       if (weather.temperature_c !== null && weather.temperature_c !== undefined) {
         return `${Math.round(weather.temperature_c)}°C`;
       }
-      
+
       if (weather.condition) {
         return weather.condition;
       }
-      
+
       return '--';
     };
 
@@ -80,8 +80,12 @@ vi.mock('./LocationMarker', () => ({
 // Mock mapUtils
 vi.mock('./mapUtils', () => ({
   validateCoordinates: (location: any) => {
-    return location.latitude >= -90 && location.latitude <= 90 &&
-           location.longitude >= -180 && location.longitude <= 180;
+    return (
+      location.latitude >= -90 &&
+      location.latitude <= 90 &&
+      location.longitude >= -180 &&
+      location.longitude <= 180
+    );
   },
   resolveCollisions: (positions: any[]) => {
     // Simple collision detection for testing
@@ -89,10 +93,8 @@ vi.mock('./mapUtils', () => ({
     for (let i = 1; i < resolved.length; i++) {
       const prev = resolved[i - 1];
       const curr = resolved[i];
-      const distance = Math.sqrt(
-        Math.pow(curr.x - prev.x, 2) + Math.pow(curr.y - prev.y, 2)
-      );
-      
+      const distance = Math.sqrt(Math.pow(curr.x - prev.x, 2) + Math.pow(curr.y - prev.y, 2));
+
       // If labels are too close (< 30px), apply offset
       if (distance < 30) {
         resolved[i] = { ...curr, y: curr.y - 30 };
@@ -152,7 +154,7 @@ function createMockLocation(
   id: number,
   latitude: number,
   longitude: number,
-  weatherOverrides?: Partial<WeatherSnapshot>
+  weatherOverrides?: Partial<WeatherSnapshot>,
 ): Location {
   return {
     id,
@@ -175,15 +177,13 @@ describe('WeatherLabel Integration - Display in MapCard', () => {
 
   describe('labels display correct temperature or condition (Requirements 3.2, 3.3)', () => {
     it('displays temperature in "{temp}°C" format when temperature is available', async () => {
-      const mockLocations = [
-        createMockLocation(1, 1.3521, 103.8198, { temperature_c: 28.5 }),
-      ];
+      const mockLocations = [createMockLocation(1, 1.3521, 103.8198, { temperature_c: 28.5 })];
       mockListLocations.mockResolvedValue({ locations: mockLocations });
 
       render(
         <StoreProvider>
           <MapCard />
-        </StoreProvider>
+        </StoreProvider>,
       );
 
       await waitFor(() => {
@@ -204,7 +204,7 @@ describe('WeatherLabel Integration - Display in MapCard', () => {
       render(
         <StoreProvider>
           <MapCard />
-        </StoreProvider>
+        </StoreProvider>,
       );
 
       await waitFor(() => {
@@ -225,7 +225,7 @@ describe('WeatherLabel Integration - Display in MapCard', () => {
       render(
         <StoreProvider>
           <MapCard />
-        </StoreProvider>
+        </StoreProvider>,
       );
 
       await waitFor(() => {
@@ -237,7 +237,7 @@ describe('WeatherLabel Integration - Display in MapCard', () => {
     it('displays correct labels for multiple locations with different weather data', async () => {
       const mockLocations = [
         createMockLocation(1, 1.3521, 103.8198, { temperature_c: 28 }),
-        createMockLocation(2, 40.7128, -74.0060, {
+        createMockLocation(2, 40.7128, -74.006, {
           temperature_c: null,
           condition: 'Rainy',
         }),
@@ -248,7 +248,7 @@ describe('WeatherLabel Integration - Display in MapCard', () => {
       render(
         <StoreProvider>
           <MapCard />
-        </StoreProvider>
+        </StoreProvider>,
       );
 
       await waitFor(() => {
@@ -263,14 +263,14 @@ describe('WeatherLabel Integration - Display in MapCard', () => {
     it('rounds temperature correctly', async () => {
       const mockLocations = [
         createMockLocation(1, 1.3521, 103.8198, { temperature_c: 28.4 }),
-        createMockLocation(2, 40.7128, -74.0060, { temperature_c: 28.6 }),
+        createMockLocation(2, 40.7128, -74.006, { temperature_c: 28.6 }),
       ];
       mockListLocations.mockResolvedValue({ locations: mockLocations });
 
       render(
         <StoreProvider>
           <MapCard />
-        </StoreProvider>
+        </StoreProvider>,
       );
 
       await waitFor(() => {
@@ -281,15 +281,13 @@ describe('WeatherLabel Integration - Display in MapCard', () => {
     });
 
     it('handles negative temperatures correctly', async () => {
-      const mockLocations = [
-        createMockLocation(1, 1.3521, 103.8198, { temperature_c: -5 }),
-      ];
+      const mockLocations = [createMockLocation(1, 1.3521, 103.8198, { temperature_c: -5 })];
       mockListLocations.mockResolvedValue({ locations: mockLocations });
 
       render(
         <StoreProvider>
           <MapCard />
-        </StoreProvider>
+        </StoreProvider>,
       );
 
       await waitFor(() => {
@@ -299,15 +297,13 @@ describe('WeatherLabel Integration - Display in MapCard', () => {
     });
 
     it('handles zero temperature correctly', async () => {
-      const mockLocations = [
-        createMockLocation(1, 1.3521, 103.8198, { temperature_c: 0 }),
-      ];
+      const mockLocations = [createMockLocation(1, 1.3521, 103.8198, { temperature_c: 0 })];
       mockListLocations.mockResolvedValue({ locations: mockLocations });
 
       render(
         <StoreProvider>
           <MapCard />
-        </StoreProvider>
+        </StoreProvider>,
       );
 
       await waitFor(() => {
@@ -330,7 +326,7 @@ describe('WeatherLabel Integration - Display in MapCard', () => {
       render(
         <StoreProvider>
           <MapCard />
-        </StoreProvider>
+        </StoreProvider>,
       );
 
       await waitFor(() => {
@@ -351,7 +347,7 @@ describe('WeatherLabel Integration - Display in MapCard', () => {
       render(
         <StoreProvider>
           <MapCard />
-        </StoreProvider>
+        </StoreProvider>,
       );
 
       await waitFor(() => {
@@ -366,7 +362,7 @@ describe('WeatherLabel Integration - Display in MapCard', () => {
           temperature_c: null,
           condition: null,
         }),
-        createMockLocation(2, 40.7128, -74.0060, {
+        createMockLocation(2, 40.7128, -74.006, {
           temperature_c: null,
           condition: '',
         }),
@@ -376,7 +372,7 @@ describe('WeatherLabel Integration - Display in MapCard', () => {
       render(
         <StoreProvider>
           <MapCard />
-        </StoreProvider>
+        </StoreProvider>,
       );
 
       await waitFor(() => {
@@ -391,15 +387,13 @@ describe('WeatherLabel Integration - Display in MapCard', () => {
   describe('labels update within 200ms when weather refreshes (Requirement 3.4)', () => {
     it('updates label when weather data changes', async () => {
       // Start with initial weather data
-      const initialLocations = [
-        createMockLocation(1, 1.3521, 103.8198, { temperature_c: 25 }),
-      ];
+      const initialLocations = [createMockLocation(1, 1.3521, 103.8198, { temperature_c: 25 })];
       mockListLocations.mockResolvedValue({ locations: initialLocations });
 
       const { rerender } = render(
         <StoreProvider>
           <MapCard />
-        </StoreProvider>
+        </StoreProvider>,
       );
 
       await waitFor(() => {
@@ -408,18 +402,16 @@ describe('WeatherLabel Integration - Display in MapCard', () => {
       });
 
       // Update weather data
-      const updatedLocations = [
-        createMockLocation(1, 1.3521, 103.8198, { temperature_c: 30 }),
-      ];
+      const updatedLocations = [createMockLocation(1, 1.3521, 103.8198, { temperature_c: 30 })];
       mockListLocations.mockResolvedValue({ locations: updatedLocations });
 
       const startTime = Date.now();
-      
+
       // Force re-render with updated data
       rerender(
         <StoreProvider>
           <MapCard />
-        </StoreProvider>
+        </StoreProvider>,
       );
 
       await waitFor(
@@ -427,7 +419,7 @@ describe('WeatherLabel Integration - Display in MapCard', () => {
           const marker = screen.getByTestId('location-marker');
           expect(marker).toHaveAttribute('data-label-text', '30°C');
         },
-        { timeout: 200 }
+        { timeout: 200 },
       );
 
       const endTime = Date.now();
@@ -435,15 +427,13 @@ describe('WeatherLabel Integration - Display in MapCard', () => {
     });
 
     it('updates label from temperature to condition', async () => {
-      const initialLocations = [
-        createMockLocation(1, 1.3521, 103.8198, { temperature_c: 25 }),
-      ];
+      const initialLocations = [createMockLocation(1, 1.3521, 103.8198, { temperature_c: 25 })];
       mockListLocations.mockResolvedValue({ locations: initialLocations });
 
       const { rerender } = render(
         <StoreProvider>
           <MapCard />
-        </StoreProvider>
+        </StoreProvider>,
       );
 
       await waitFor(() => {
@@ -461,11 +451,11 @@ describe('WeatherLabel Integration - Display in MapCard', () => {
       mockListLocations.mockResolvedValue({ locations: updatedLocations });
 
       const startTime = Date.now();
-      
+
       rerender(
         <StoreProvider>
           <MapCard />
-        </StoreProvider>
+        </StoreProvider>,
       );
 
       await waitFor(
@@ -473,7 +463,7 @@ describe('WeatherLabel Integration - Display in MapCard', () => {
           const marker = screen.getByTestId('location-marker');
           expect(marker).toHaveAttribute('data-label-text', 'Cloudy');
         },
-        { timeout: 200 }
+        { timeout: 200 },
       );
 
       const endTime = Date.now();
@@ -492,7 +482,7 @@ describe('WeatherLabel Integration - Display in MapCard', () => {
       const { rerender } = render(
         <StoreProvider>
           <MapCard />
-        </StoreProvider>
+        </StoreProvider>,
       );
 
       await waitFor(() => {
@@ -510,11 +500,11 @@ describe('WeatherLabel Integration - Display in MapCard', () => {
       mockListLocations.mockResolvedValue({ locations: updatedLocations });
 
       const startTime = Date.now();
-      
+
       rerender(
         <StoreProvider>
           <MapCard />
-        </StoreProvider>
+        </StoreProvider>,
       );
 
       await waitFor(
@@ -522,7 +512,7 @@ describe('WeatherLabel Integration - Display in MapCard', () => {
           const marker = screen.getByTestId('location-marker');
           expect(marker).toHaveAttribute('data-label-text', '--');
         },
-        { timeout: 200 }
+        { timeout: 200 },
       );
 
       const endTime = Date.now();
@@ -532,14 +522,14 @@ describe('WeatherLabel Integration - Display in MapCard', () => {
     it('updates multiple labels simultaneously when weather refreshes', async () => {
       const initialLocations = [
         createMockLocation(1, 1.3521, 103.8198, { temperature_c: 25 }),
-        createMockLocation(2, 40.7128, -74.0060, { temperature_c: 20 }),
+        createMockLocation(2, 40.7128, -74.006, { temperature_c: 20 }),
       ];
       mockListLocations.mockResolvedValue({ locations: initialLocations });
 
       const { rerender } = render(
         <StoreProvider>
           <MapCard />
-        </StoreProvider>
+        </StoreProvider>,
       );
 
       await waitFor(() => {
@@ -551,16 +541,16 @@ describe('WeatherLabel Integration - Display in MapCard', () => {
       // Update both locations
       const updatedLocations = [
         createMockLocation(1, 1.3521, 103.8198, { temperature_c: 28 }),
-        createMockLocation(2, 40.7128, -74.0060, { temperature_c: 22 }),
+        createMockLocation(2, 40.7128, -74.006, { temperature_c: 22 }),
       ];
       mockListLocations.mockResolvedValue({ locations: updatedLocations });
 
       const startTime = Date.now();
-      
+
       rerender(
         <StoreProvider>
           <MapCard />
-        </StoreProvider>
+        </StoreProvider>,
       );
 
       await waitFor(
@@ -569,7 +559,7 @@ describe('WeatherLabel Integration - Display in MapCard', () => {
           expect(markers[0]).toHaveAttribute('data-label-text', '28°C');
           expect(markers[1]).toHaveAttribute('data-label-text', '22°C');
         },
-        { timeout: 200 }
+        { timeout: 200 },
       );
 
       const endTime = Date.now();
@@ -589,13 +579,13 @@ describe('WeatherLabel Integration - Display in MapCard', () => {
       render(
         <StoreProvider>
           <MapCard />
-        </StoreProvider>
+        </StoreProvider>,
       );
 
       await waitFor(() => {
         const markers = screen.getAllByTestId('location-marker');
         expect(markers).toHaveLength(2);
-        
+
         // Both markers should have label positions assigned
         expect(markers[0]).toHaveAttribute('data-label-position');
         expect(markers[1]).toHaveAttribute('data-label-position');
@@ -607,20 +597,20 @@ describe('WeatherLabel Integration - Display in MapCard', () => {
       const mockLocations = [
         createMockLocation(1, 1.3521, 103.8198, { temperature_c: 25 }),
         createMockLocation(2, 1.3522, 103.8199, { temperature_c: 26 }),
-        createMockLocation(3, 1.3523, 103.8200, { temperature_c: 27 }),
+        createMockLocation(3, 1.3523, 103.82, { temperature_c: 27 }),
       ];
       mockListLocations.mockResolvedValue({ locations: mockLocations });
 
       render(
         <StoreProvider>
           <MapCard />
-        </StoreProvider>
+        </StoreProvider>,
       );
 
       await waitFor(() => {
         const markers = screen.getAllByTestId('location-marker');
         expect(markers).toHaveLength(3);
-        
+
         // All markers should have label positions
         markers.forEach((marker) => {
           expect(marker).toHaveAttribute('data-label-position');
@@ -632,7 +622,7 @@ describe('WeatherLabel Integration - Display in MapCard', () => {
       // Create locations that are far apart
       const mockLocations = [
         createMockLocation(1, 1.3521, 103.8198, { temperature_c: 25 }),
-        createMockLocation(2, 40.7128, -74.0060, { temperature_c: 20 }), // New York
+        createMockLocation(2, 40.7128, -74.006, { temperature_c: 20 }), // New York
         createMockLocation(3, -33.8688, 151.2093, { temperature_c: 22 }), // Sydney
       ];
       mockListLocations.mockResolvedValue({ locations: mockLocations });
@@ -640,13 +630,13 @@ describe('WeatherLabel Integration - Display in MapCard', () => {
       render(
         <StoreProvider>
           <MapCard />
-        </StoreProvider>
+        </StoreProvider>,
       );
 
       await waitFor(() => {
         const markers = screen.getAllByTestId('location-marker');
         expect(markers).toHaveLength(3);
-        
+
         // All markers should have default 'above' position
         markers.forEach((marker) => {
           expect(marker).toHaveAttribute('data-label-position', 'above');
@@ -664,7 +654,7 @@ describe('WeatherLabel Integration - Display in MapCard', () => {
       const { rerender } = render(
         <StoreProvider>
           <MapCard />
-        </StoreProvider>
+        </StoreProvider>,
       );
 
       await waitFor(() => {
@@ -676,13 +666,13 @@ describe('WeatherLabel Integration - Display in MapCard', () => {
       rerender(
         <StoreProvider>
           <MapCard />
-        </StoreProvider>
+        </StoreProvider>,
       );
 
       await waitFor(() => {
         const markers = screen.getAllByTestId('location-marker');
         expect(markers).toHaveLength(2);
-        
+
         // Verify collision detection is still applied
         markers.forEach((marker) => {
           expect(marker).toHaveAttribute('data-label-position');
@@ -704,7 +694,7 @@ describe('WeatherLabel Integration - Display in MapCard', () => {
       render(
         <StoreProvider>
           <MapCard />
-        </StoreProvider>
+        </StoreProvider>,
       );
 
       await waitFor(() => {
@@ -725,29 +715,26 @@ describe('WeatherLabel Integration - Display in MapCard', () => {
       render(
         <StoreProvider>
           <MapCard />
-        </StoreProvider>
+        </StoreProvider>,
       );
 
       await waitFor(() => {
         const marker = screen.getByTestId('location-marker');
-        expect(marker).toHaveAttribute(
-          'data-label-text',
-          'Heavy Thunderstorms with Lightning'
-        );
+        expect(marker).toHaveAttribute('data-label-text', 'Heavy Thunderstorms with Lightning');
       });
     });
 
     it('handles extreme temperature values', async () => {
       const mockLocations = [
         createMockLocation(1, 1.3521, 103.8198, { temperature_c: 50 }),
-        createMockLocation(2, 40.7128, -74.0060, { temperature_c: -40 }),
+        createMockLocation(2, 40.7128, -74.006, { temperature_c: -40 }),
       ];
       mockListLocations.mockResolvedValue({ locations: mockLocations });
 
       render(
         <StoreProvider>
           <MapCard />
-        </StoreProvider>
+        </StoreProvider>,
       );
 
       await waitFor(() => {
@@ -758,15 +745,13 @@ describe('WeatherLabel Integration - Display in MapCard', () => {
     });
 
     it('handles single location without collision detection', async () => {
-      const mockLocations = [
-        createMockLocation(1, 1.3521, 103.8198, { temperature_c: 25 }),
-      ];
+      const mockLocations = [createMockLocation(1, 1.3521, 103.8198, { temperature_c: 25 })];
       mockListLocations.mockResolvedValue({ locations: mockLocations });
 
       render(
         <StoreProvider>
           <MapCard />
-        </StoreProvider>
+        </StoreProvider>,
       );
 
       await waitFor(() => {

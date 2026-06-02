@@ -12,6 +12,8 @@
     "reset": "node scripts/reset.mjs",
     "test": "NODE_OPTIONS=--disable-warning=ExperimentalWarning vitest run",
     "test:watch": "NODE_OPTIONS=--disable-warning=ExperimentalWarning vitest",
+    "lint": "eslint \"frontend/src/**/*.{ts,tsx}\" \"backend/src/**/*.ts\"",
+    "format": "prettier --write \"frontend/src/**/*.{ts,tsx,css}\" \"backend/src/**/*.ts\"",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate"
   },

@@ -186,24 +186,49 @@ export class SingaporeWeatherClient {
     const forecastPayload = await this.fetchLatestForecastPayload().catch(() => null);
 
     const [temperature, humidity, rainfall] = await Promise.all([
-      this.fetchNearestReading('air-temperature', latitude, longitude).catch(() => ({ value: null, timestamp: null })),
-      this.fetchNearestReading('relative-humidity', latitude, longitude).catch(() => ({ value: null, timestamp: null })),
-      this.fetchNearestReading('rainfall', latitude, longitude).catch(() => ({ value: null, timestamp: null })),
+      this.fetchNearestReading('air-temperature', latitude, longitude).catch(() => ({
+        value: null,
+        timestamp: null,
+      })),
+      this.fetchNearestReading('relative-humidity', latitude, longitude).catch(() => ({
+        value: null,
+        timestamp: null,
+      })),
+      this.fetchNearestReading('rainfall', latitude, longitude).catch(() => ({
+        value: null,
+        timestamp: null,
+      })),
     ]);
 
     const [windSpeed, windDirection, uv] = await Promise.all([
-      this.fetchNearestReading('wind-speed', latitude, longitude).catch(() => ({ value: null, timestamp: null })),
-      this.fetchNearestReading('wind-direction', latitude, longitude).catch(() => ({ value: null, timestamp: null })),
+      this.fetchNearestReading('wind-speed', latitude, longitude).catch(() => ({
+        value: null,
+        timestamp: null,
+      })),
+      this.fetchNearestReading('wind-direction', latitude, longitude).catch(() => ({
+        value: null,
+        timestamp: null,
+      })),
       this.fetchUvIndex().catch(() => ({ value: null, timestamp: null })),
     ]);
 
     const [twentyFourHour, fourDay] = await Promise.all([
-      this.fetchTwentyFourHourForecast(latitude, longitude).catch(() => ({ low: null, high: null, periods: [], timestamp: null })),
+      this.fetchTwentyFourHourForecast(latitude, longitude).catch(() => ({
+        low: null,
+        high: null,
+        periods: [],
+        timestamp: null,
+      })),
       this.fetchFourDayForecast().catch(() => ({ days: [], timestamp: null })),
     ]);
 
     // Air quality fetches PSI + PM2.5 internally (2 requests) — run last
-    const airQuality = await this.fetchAirQuality(latitude, longitude).catch(() => ({ psi: null, pm25: null, region: null, timestamp: null }));
+    const airQuality = await this.fetchAirQuality(latitude, longitude).catch(() => ({
+      psi: null,
+      pm25: null,
+      region: null,
+      timestamp: null,
+    }));
 
     const base = forecastPayload
       ? this.snapshotFromPayload(forecastPayload, latitude, longitude)
@@ -607,7 +632,6 @@ function valueForRegion(
   if (!values || !region) return null;
   return numberOrNull(values[region]);
 }
-
 
 function defaultRegions(): RegionMetadata[] {
   return [

@@ -31,8 +31,12 @@ vi.mock('./LocationMarker', () => ({
 // Mock mapUtils
 vi.mock('./mapUtils', () => ({
   validateCoordinates: (location: any) => {
-    return location.latitude >= -90 && location.latitude <= 90 &&
-           location.longitude >= -180 && location.longitude <= 180;
+    return (
+      location.latitude >= -90 &&
+      location.latitude <= 90 &&
+      location.longitude >= -180 &&
+      location.longitude <= 180
+    );
   },
 }));
 
@@ -93,17 +97,17 @@ describe('MapCard', () => {
       render(
         <StoreProvider>
           <MapCard />
-        </StoreProvider>
+        </StoreProvider>,
       );
 
       await waitFor(() => {
         const mapContainer = screen.getByTestId('map-container');
         expect(mapContainer).toBeInTheDocument();
-        
+
         // Check default center coordinates (Singapore: 1.3521°N, 103.8198°E)
         const centerData = mapContainer.getAttribute('data-center');
         expect(centerData).toBe('[1.3521,103.8198]');
-        
+
         // Check default zoom level
         expect(mapContainer.getAttribute('data-zoom')).toBe('11');
       });
@@ -116,14 +120,14 @@ describe('MapCard', () => {
       render(
         <StoreProvider>
           <MapCard />
-        </StoreProvider>
+        </StoreProvider>,
       );
 
       await waitFor(() => {
         const tileLayer = screen.getByTestId('tile-layer');
         expect(tileLayer).toBeInTheDocument();
         expect(tileLayer.getAttribute('data-url')).toBe(
-          'https://tile.openstreetmap.org/{z}/{x}/{y}.png'
+          'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
         );
       });
     });
@@ -137,7 +141,7 @@ describe('MapCard', () => {
       render(
         <StoreProvider>
           <MapCard />
-        </StoreProvider>
+        </StoreProvider>,
       );
 
       await waitFor(() => {
@@ -153,7 +157,7 @@ describe('MapCard', () => {
       render(
         <StoreProvider>
           <MapCard />
-        </StoreProvider>
+        </StoreProvider>,
       );
 
       await waitFor(() => {
@@ -170,7 +174,7 @@ describe('MapCard', () => {
       render(
         <StoreProvider>
           <MapCard />
-        </StoreProvider>
+        </StoreProvider>,
       );
 
       await waitFor(() => {
@@ -186,7 +190,7 @@ describe('MapCard', () => {
       render(
         <StoreProvider>
           <MapCard />
-        </StoreProvider>
+        </StoreProvider>,
       );
 
       await waitFor(() => {
@@ -208,7 +212,7 @@ describe('MapCard', () => {
       render(
         <StoreProvider>
           <MapCard />
-        </StoreProvider>
+        </StoreProvider>,
       );
 
       // Enter fullscreen
@@ -227,10 +231,13 @@ describe('MapCard', () => {
       fireEvent.click(closeButton);
 
       // Wait for transition back to card view
-      await waitFor(() => {
-        expect(screen.getByLabelText('Expand map')).toBeInTheDocument();
-        expect(screen.queryByLabelText('Exit fullscreen')).not.toBeInTheDocument();
-      }, { timeout: 1000 });
+      await waitFor(
+        () => {
+          expect(screen.getByLabelText('Expand map')).toBeInTheDocument();
+          expect(screen.queryByLabelText('Exit fullscreen')).not.toBeInTheDocument();
+        },
+        { timeout: 1000 },
+      );
     });
   });
 
@@ -242,7 +249,7 @@ describe('MapCard', () => {
       render(
         <StoreProvider>
           <MapCard />
-        </StoreProvider>
+        </StoreProvider>,
       );
 
       // Enter fullscreen
@@ -260,10 +267,13 @@ describe('MapCard', () => {
       fireEvent.keyDown(window, { key: 'Escape' });
 
       // Wait for transition back to card view
-      await waitFor(() => {
-        expect(screen.getByLabelText('Expand map')).toBeInTheDocument();
-        expect(screen.queryByLabelText('Exit fullscreen')).not.toBeInTheDocument();
-      }, { timeout: 1000 });
+      await waitFor(
+        () => {
+          expect(screen.getByLabelText('Expand map')).toBeInTheDocument();
+          expect(screen.queryByLabelText('Exit fullscreen')).not.toBeInTheDocument();
+        },
+        { timeout: 1000 },
+      );
     });
 
     it('does not affect state when Escape is pressed in card view', async () => {
@@ -273,7 +283,7 @@ describe('MapCard', () => {
       render(
         <StoreProvider>
           <MapCard />
-        </StoreProvider>
+        </StoreProvider>,
       );
 
       await waitFor(() => {
@@ -296,7 +306,7 @@ describe('MapCard', () => {
       const { container } = render(
         <StoreProvider>
           <MapCard />
-        </StoreProvider>
+        </StoreProvider>,
       );
 
       // Enter fullscreen
@@ -319,7 +329,7 @@ describe('MapCard', () => {
       const { container } = render(
         <StoreProvider>
           <MapCard />
-        </StoreProvider>
+        </StoreProvider>,
       );
 
       await waitFor(() => {
@@ -335,7 +345,7 @@ describe('MapCard', () => {
     it.skip('ignores button clicks during transitions (requires isTransitioning state - to be implemented in task 10.1)', async () => {
       // This test is skipped because the isTransitioning state hasn't been implemented yet
       // It will be implemented in task 10.1 "Add fullscreen state management to MapCard"
-      // 
+      //
       // Expected behavior:
       // - When transitioning to fullscreen, isTransitioning should be true for 500ms
       // - When transitioning back to card view, isTransitioning should be true for 500ms
@@ -351,7 +361,7 @@ describe('MapCard', () => {
         // This test verifies Requirement 7.3: map initialization timeout
         // The MapCard component has a 2-second timeout that triggers if the map doesn't initialize
         // Since our mock MapContainer doesn't call the ref callback, the timeout will trigger
-        
+
         const { listLocations } = await import('../api');
         vi.mocked(listLocations).mockResolvedValue({ locations: [] });
 
@@ -360,14 +370,16 @@ describe('MapCard', () => {
         render(
           <StoreProvider>
             <MapCard />
-          </StoreProvider>
+          </StoreProvider>,
         );
 
         // Fast-forward time by 2 seconds to trigger initialization timeout
         await vi.advanceTimersByTimeAsync(2000);
 
         // Check that error message is displayed
-        expect(screen.getByText('Unable to load map. Please refresh the page.')).toBeInTheDocument();
+        expect(
+          screen.getByText('Unable to load map. Please refresh the page.'),
+        ).toBeInTheDocument();
 
         vi.useRealTimers();
       });
@@ -378,14 +390,14 @@ describe('MapCard', () => {
         // This test verifies Requirement 7.8: gray placeholder tiles on tile loading failure
         // The MapCard component configures the TileLayer with an errorTileUrl
         // that displays a gray placeholder with "Tile unavailable" text
-        
+
         const { listLocations } = await import('../api');
         vi.mocked(listLocations).mockResolvedValue({ locations: [] });
 
         render(
           <StoreProvider>
             <MapCard />
-          </StoreProvider>
+          </StoreProvider>,
         );
 
         // The TileLayer component in MapCard.tsx is configured with errorTileUrl
@@ -401,14 +413,14 @@ describe('MapCard', () => {
         // This test verifies Requirement 7.5: map.remove() called on unmount
         // The MapCard component has a useEffect cleanup function that calls map.remove()
         // when the component unmounts to clean up map resources
-        
+
         const { listLocations } = await import('../api');
         vi.mocked(listLocations).mockResolvedValue({ locations: [] });
 
         const { unmount } = render(
           <StoreProvider>
             <MapCard />
-          </StoreProvider>
+          </StoreProvider>,
         );
 
         // Verify component is mounted

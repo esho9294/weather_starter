@@ -7,14 +7,14 @@ interface WeatherLabelProps {
 
 /**
  * WeatherLabel component displays weather information above a location pin.
- * 
+ *
  * **Validates: Requirements 3.1, 3.2, 3.3, 3.6, 3.7, 3.8**
- * 
+ *
  * Display logic:
  * - If temperature is available: Display "{temp}°C" format
  * - If temperature unavailable but condition exists: Display condition text
  * - If no weather data: Display "--" placeholder
- * 
+ *
  * Styling:
  * - Position: 20px above pin vertical center
  * - Background: rgba(0, 0, 0, 0.8) with white text
@@ -29,12 +29,12 @@ export function WeatherLabel({ weather, position = 'above' }: WeatherLabelProps)
     if (weather.temperature_c !== null && weather.temperature_c !== undefined) {
       return `${Math.round(weather.temperature_c)}°C`;
     }
-    
+
     // Priority 2: Weather condition (Requirement 3.3)
     if (weather.condition) {
       return weather.condition;
     }
-    
+
     // Priority 3: Placeholder (Requirement 3.6)
     return '--';
   };
