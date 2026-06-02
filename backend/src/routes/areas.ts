@@ -13,10 +13,10 @@ export function createAreasRouter(): Router {
   const router: Router = createRouter();
   const weatherClient = new SingaporeWeatherClient({ apiKey: process.env.WEATHER_API_KEY });
 
-  router.get('/areas', async (_request, response, next) => {
+  router.get('/areas', async (_request, response, _next) => {
     try {
       const payload = await weatherClient.fetchLatestForecastPayload();
-      const root = (payload as any).data ?? payload;
+      const root = (payload as Record<string, unknown>).data ?? payload;
       const rawAreas: Array<{
         name?: string;
         label_location?: { latitude?: number | string; longitude?: number | string };

@@ -71,7 +71,7 @@ describe('FullscreenPortal', () => {
         </FullscreenPortal>,
       );
 
-      const closeButton = screen.getByLabelText('Close fullscreen');
+      const closeButton = screen.getByLabelText('Exit fullscreen');
       expect(closeButton).toBeInTheDocument();
     });
 
@@ -239,7 +239,7 @@ describe('FullscreenPortal', () => {
         </FullscreenPortal>,
       );
 
-      const closeButton = screen.getByLabelText('Close fullscreen');
+      const closeButton = screen.getByLabelText('Exit fullscreen');
       fireEvent.click(closeButton);
 
       expect(onClose).toHaveBeenCalledTimes(1);
@@ -254,7 +254,7 @@ describe('FullscreenPortal', () => {
         </FullscreenPortal>,
       );
 
-      const closeButton = screen.getByLabelText('Close fullscreen');
+      const closeButton = screen.getByLabelText('Exit fullscreen');
       fireEvent.click(closeButton);
       fireEvent.click(closeButton);
       fireEvent.click(closeButton);
@@ -272,7 +272,7 @@ describe('FullscreenPortal', () => {
       );
 
       // Close button should not be rendered when portal is closed
-      expect(screen.queryByLabelText('Close fullscreen')).not.toBeInTheDocument();
+      expect(screen.queryByLabelText('Exit fullscreen')).not.toBeInTheDocument();
       expect(onClose).not.toHaveBeenCalled();
     });
   });
@@ -416,7 +416,7 @@ describe('FullscreenPortal', () => {
         </FullscreenPortal>,
       );
 
-      const closeButton = screen.getByLabelText('Close fullscreen');
+      const closeButton = screen.getByLabelText('Exit fullscreen');
 
       expect(closeButton).toHaveClass(
         'absolute',
@@ -441,7 +441,7 @@ describe('FullscreenPortal', () => {
         </FullscreenPortal>,
       );
 
-      const closeButton = screen.getByLabelText('Close fullscreen');
+      const closeButton = screen.getByLabelText('Exit fullscreen');
       const svg = closeButton.querySelector('svg');
 
       expect(svg).toBeInTheDocument();

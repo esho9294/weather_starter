@@ -469,15 +469,13 @@ describe('MapCard - Fullscreen Transitions Integration', () => {
         expect(screen.getByLabelText('Exit fullscreen')).toBeInTheDocument();
       });
 
-      // Verify map state is preserved (now there are two containers: card + fullscreen)
+      // Verify map state is preserved (implementation uses conditional rendering, so only fullscreen view exists)
       const fullscreenMapContainers = screen.getAllByTestId('map-container');
-      expect(fullscreenMapContainers).toHaveLength(2);
+      expect(fullscreenMapContainers).toHaveLength(1);
 
-      // Both should have the same center and zoom
-      fullscreenMapContainers.forEach((container) => {
-        expect(container.getAttribute('data-center')).toBe(initialCenter);
-        expect(container.getAttribute('data-zoom')).toBe(initialZoom);
-      });
+      // Should have the same center and zoom
+      expect(fullscreenMapContainers[0].getAttribute('data-center')).toBe(initialCenter);
+      expect(fullscreenMapContainers[0].getAttribute('data-zoom')).toBe(initialZoom);
     });
 
     it('preserves map center when transitioning back to card view', async () => {
@@ -504,9 +502,9 @@ describe('MapCard - Fullscreen Transitions Integration', () => {
       // Wait for expand transition to complete
       await new Promise((resolve) => setTimeout(resolve, 600));
 
-      // Get fullscreen map state (two containers: card + fullscreen)
+      // Get fullscreen map state (only fullscreen view exists due to conditional rendering)
       const fullscreenMapContainers = screen.getAllByTestId('map-container');
-      expect(fullscreenMapContainers).toHaveLength(2);
+      expect(fullscreenMapContainers).toHaveLength(1);
       const fullscreenCenter = fullscreenMapContainers[0].getAttribute('data-center');
       const fullscreenZoom = fullscreenMapContainers[0].getAttribute('data-zoom');
 
@@ -521,7 +519,7 @@ describe('MapCard - Fullscreen Transitions Integration', () => {
         { timeout: 1000 },
       );
 
-      // Verify map state is preserved (back to one container)
+      // Verify map state is preserved (back to one container in card view)
       const cardMapContainers = screen.getAllByTestId('map-container');
       expect(cardMapContainers).toHaveLength(1);
       const cardCenter = cardMapContainers[0].getAttribute('data-center');
@@ -620,15 +618,15 @@ describe('MapCard - Fullscreen Transitions Integration', () => {
         expect(screen.getByLabelText('Exit fullscreen')).toBeInTheDocument();
       });
 
-      // Verify all pins are visible in both card and fullscreen views (6 total: 3 in card + 3 in fullscreen)
+      // Verify all pins are visible in fullscreen view (conditional rendering means only one view at a time)
       const allMarkers = screen.getAllByTestId('location-marker');
-      expect(allMarkers).toHaveLength(6); // 3 locations × 2 views
+      expect(allMarkers).toHaveLength(3);
 
-      // Verify each location ID appears twice (once in card view, once in fullscreen)
+      // Verify each location ID appears once in the fullscreen view
       const locationIds = allMarkers.map((m) => m.getAttribute('data-location-id'));
-      expect(locationIds.filter((id) => id === '1')).toHaveLength(2);
-      expect(locationIds.filter((id) => id === '2')).toHaveLength(2);
-      expect(locationIds.filter((id) => id === '3')).toHaveLength(2);
+      expect(locationIds).toContain('1');
+      expect(locationIds).toContain('2');
+      expect(locationIds).toContain('3');
     });
 
     it('renders weather labels for all pins in fullscreen mode', async () => {
@@ -723,9 +721,9 @@ describe('MapCard - Fullscreen Transitions Integration', () => {
         expect(screen.getByLabelText('Exit fullscreen')).toBeInTheDocument();
       });
 
-      // Verify empty state message appears in both views (2 total)
+      // Verify empty state message appears in fullscreen view (only one view at a time)
       const emptyMessages = screen.getAllByText('No locations saved yet');
-      expect(emptyMessages).toHaveLength(2); // One in card view, one in fullscreen
+      expect(emptyMessages).toHaveLength(1);
     });
   });
 
