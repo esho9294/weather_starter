@@ -35,6 +35,15 @@ When working on this codebase:
 4. **Styling:** Use Tailwind utility classes, respect the theme system
 5. **Logging:** Use Pino for structured logging, log user interactions via `logInteraction()`
 
+### Working with SQLite Data
+
+When you need to query or display saved locations/weather data:
+
+- The database file is at `backend/weather.db` (SQLite, managed by Drizzle ORM)
+- Use Node's built-in `node:sqlite` module to query it: `node --experimental-sqlite -e "const { DatabaseSync } = require('node:sqlite'); const db = new DatabaseSync('backend/weather.db'); const rows = db.prepare('SELECT * FROM locations').all(); console.log(JSON.stringify(rows, null, 2));"`
+- Or use DB Browser for SQLite (GUI tool) if available
+- The file is gitignored via `backend/*.db` — users will have their own local copy
+
 ## Project Structure
 
 ```
